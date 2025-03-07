@@ -1,0 +1,111 @@
+import 'package:flutter/material.dart';
+import 'package:jarvis_ai/screens/knowledgebase_detail_screen.dart';
+import 'package:jarvis_ai/widgets/knowledgebase/knowledgebase_item.dart';
+import 'package:jarvis_ai/widgets/knowledgebase/new_knowledgebase_popup.dart';
+import 'package:jarvis_ai/widgets/knowledgebase/paginationwidget.dart';
+import 'package:jarvis_ai/widgets/app_drawer_widget.dart';
+
+class KnowledgeBaseScreen extends StatelessWidget {
+  const KnowledgeBaseScreen({super.key});
+
+  void showNewKnowledgeDialog(BuildContext context) {
+    // Show popup when clicking the "New" button
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CreateKnowledgeBaseDialog();
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Knowledge'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              // Handle Create Knowledge
+              showNewKnowledgeDialog(context);
+            },
+          ),
+        ],
+      ),
+      drawer: const AppDrawerWidget(),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    prefixIcon: Icon(Icons.search, color: Theme.of(context).primaryColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // Handle Knowledge base item
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const KnowledgeDetailScreen()),
+                        );
+                      },
+                      child: const KnowledgeBaseItem(
+                        title: 'Chat bot',
+                        description:
+                        'You are my chat bot to test create chat bot feature. When I ask you any question, you answer start with "Hello Nhân Dzai..."',
+                        units: 1,
+                        size: '132.00 Bytes',
+                        editTime: '9/10/2024 08:46:41',
+                      ),
+                    ),
+                    const KnowledgeBaseItem(
+                      title: 'KB 01',
+                      description: '',
+                      units: 1,
+                      size: '526.00 Bytes',
+                      editTime: '17/10/2024 14:44:46',
+                    ),
+                  ],
+                ),
+              ),
+              const PaginationWidget(),
+            ],
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              margin: const EdgeInsets.all(16),
+              child: FloatingActionButton(
+                backgroundColor: Theme.of(context).primaryColor,
+                onPressed: () {
+                  // Handle Create Knowledge
+                  showNewKnowledgeDialog(context);
+                },
+                child: const Icon(Icons.add),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
