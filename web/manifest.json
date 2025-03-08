@@ -1,6 +1,6 @@
 {
-    "name": "jarvis_ai",
-    "short_name": "jarvis_ai",
+    "name": "project_ai_chat",
+    "short_name": "project_ai_chat",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
