@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FormLoadData extends StatefulWidget {
@@ -16,7 +15,6 @@ class _FormLoadDataState extends State<FormLoadData> {
   void _saveFile() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
       widget.addNewData(_enteredName);
       Navigator.pop(context);
     }
@@ -24,26 +22,50 @@ class _FormLoadDataState extends State<FormLoadData> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text(
-        "Add new knowledge",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
-      content: SingleChildScrollView(
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 8,
+      child: Container(
+        width: 350,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.white, Colors.grey.shade400],
+          ),
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              "Add New Knowledge",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: Colors.blue.shade800,
+              ),
+            ),
+            const SizedBox(height: 20),
             Form(
               key: _formKey,
               child: TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Tên',
-                  hintText: 'Nhập tên',
-                  suffixIcon: Icon(Icons.edit),
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  hintText: 'Enter name',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  prefixIcon: Icon(Icons.file_open, color: Colors.blue.shade600),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Vui lòng nhập tên';
+                    return 'Please enter a name';
                   }
                   return null;
                 },
@@ -52,61 +74,90 @@ class _FormLoadDataState extends State<FormLoadData> {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.blue,
-                    width: 1,
+            const SizedBox(height: 20),
+            Container(
+              height: 150,
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 2,
+                    blurRadius: 5,
                   ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.cloud_upload,
-                        size: 80,
-                        color: Colors.blueAccent,
+                ],
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.cloud_upload_outlined,
+                      size: 60,
+                      color: Colors.blue.shade600,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Drop files here or click to upload',
+                      style: TextStyle(
+                        color: Colors.blue.shade700,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
-                      SizedBox(height: 10),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          'Click or drag file to this area to upload',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: Navigator.of(context).pop ,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                ElevatedButton(
+                  onPressed: _saveFile,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    backgroundColor: Colors.blue.shade600,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                  child: const Text(
+                    "Create",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Hủy"),
-            ),
-            ElevatedButton(
-              onPressed: _saveFile,
-              child: const Text("Tạo Ngay"),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class KnowledgeBaseProvider with ChangeNotifier {
+class KnowledgeBase with ChangeNotifier {
   final List<String> _knowledgeBases = [
     "Document Assistant",
     "Travel Planner",

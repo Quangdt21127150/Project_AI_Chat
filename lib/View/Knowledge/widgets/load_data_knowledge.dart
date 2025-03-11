@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_ai_chat/View/Knowledge/widgets/form_load_data.dart';
 import 'package:project_ai_chat/View/Knowledge/widgets/form_load_data_confluence.dart';
@@ -70,7 +69,7 @@ class _LoadDataKnowledgeState extends State<LoadDataKnowledge> {
     return Column(
       children: [
         Align(
-          alignment: Alignment.centerLeft, // Align to the left
+          alignment: Alignment.centerLeft,
           child: Text(widget.nameTypeData),
         ),
         Column(
@@ -89,7 +88,7 @@ class _LoadDataKnowledgeState extends State<LoadDataKnowledge> {
                           width: 34,
                           errorBuilder: (context, error, stackTrace) {
                             return const Icon(Icons
-                                .storage); // Hiển thị icon lỗi nếu không load được hình
+                                .storage);
                           },
                         ),
                         const SizedBox(width: 10),
@@ -120,32 +119,31 @@ class _LoadDataKnowledgeState extends State<LoadDataKnowledge> {
         const SizedBox(
           height: 6,
         ),
-        OutlinedButton(
+        ElevatedButton(
           onPressed: () {
             _openDialogAddFile(context);
           },
-          style: OutlinedButton.styleFrom(
-            side: const BorderSide(width: 1, color: Colors.blue),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue, // Background color
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
           ),
           child: const Row(
-            mainAxisSize:
-                MainAxisSize.min, // Đảm bảo nút không chiếm toàn bộ chiều ngang
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                Icons.add,
-                color: Colors.blue,
+                Icons.upload,
+                color: Colors.white,
               ),
-              SizedBox(width: 8), // Khoảng cách giữa icon và text
+              SizedBox(width: 8),
               Text(
                 'Upload',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Colors.white),
               ),
             ],
           ),
-        ),
+        )
       ],
     );
   }

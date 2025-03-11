@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_ai_chat/ViewModel/KnowledgeBaseProvider.dart';
+import 'package:project_ai_chat/ViewModel/knowledge_base.dart';
 import 'package:provider/provider.dart';
 
 class NewBotKnowledge extends StatelessWidget {
@@ -13,7 +13,7 @@ class NewBotKnowledge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final arrKnowledge =
-    Provider.of<KnowledgeBaseProvider>(context, listen: false)
+    Provider.of<KnowledgeBase>(context, listen: false)
         .knowledgeBases
         .where((element) => !arrKnowledgeAdded.contains(element));
 

@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FormLoadDataGGDrive extends StatefulWidget {
@@ -26,70 +23,94 @@ class _FormLoadDataGGDriveState extends State<FormLoadDataGGDrive> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text(
-        "Add Unit",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              // mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.network(
-                  "https://static-00.iconduck.com/assets.00/google-drive-icon-1024x1024-h7igbgsr.png",
-                  width: 34,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons
-                        .storage); // Hiển thị icon lỗi nếu không load được hình
-                  },
-                ),
-                const SizedBox(width: 4),
-                const Text(
-                  "Google Drive",
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-            Form(
-              key: _formKey,
-              child: Column(
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 10,
+      child: Container(
+        width: 400,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white, Colors.grey.shade400],
+          ),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Tên',
-                      hintText: 'Nhập tên',
-                      suffixIcon: Icon(Icons.edit),
+                  Image.network(
+                    "https://static-00.iconduck.com/assets.00/google-drive-icon-1024x1024-h7igbgsr.png",
+                    width: 40,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(Icons.storage, size: 40, color: Colors.blue.shade600);
+                    },
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    "Google Drive Unit",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blue.shade800,
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Vui lòng nhập tên';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _enteredName = value!;
-                    },
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  const Text("* Google Drive Credential:"),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Container(
+                ],
+              ),
+              const SizedBox(height: 24),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        hintText: 'Enter name',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: Icon(Icons.person, color: Colors.blue.shade600),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a name';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _enteredName = value!;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        "* Google Drive Credential:",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.blue.shade800,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 150,
                       decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.blue,
+                          color: Colors.blue.shade300,
                           width: 1,
                         ),
-                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Center(
                         child: Column(
@@ -97,7 +118,7 @@ class _FormLoadDataGGDriveState extends State<FormLoadDataGGDrive> {
                           children: [
                             Icon(
                               Icons.outbox,
-                              size: 80,
+                              size: 60,
                               color: Colors.blueAccent,
                             ),
                             SizedBox(height: 10),
@@ -115,45 +136,79 @@ class _FormLoadDataGGDriveState extends State<FormLoadDataGGDrive> {
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Url',
-                      hintText: 'Nhập Url',
-                      suffixIcon: Icon(Icons.edit),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'URL',
+                        hintText: 'Enter URL',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: Icon(Icons.link, color: Colors.blue.shade600),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a URL';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {},
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Vui lòng nhập tên';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {},
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: Navigator.of(context).pop,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
+                    ),
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton(
+                    onPressed: _saveFile,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      backgroundColor: Colors.blue.shade700,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 3,
+                    ),
+                    child: const Text(
+                      "Create",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Hủy"),
-            ),
-            ElevatedButton(
-              onPressed: _saveFile,
-              child: const Text("Tạo Ngay"),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }
