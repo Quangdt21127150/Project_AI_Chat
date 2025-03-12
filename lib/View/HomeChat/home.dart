@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:project_ai_chat/View/Account/pages/account_screen.dart';
+import 'package:project_ai_chat/View/Account/account_screen.dart';
 import 'package:project_ai_chat/View/Bot/page/bot_screen.dart';
 import 'package:project_ai_chat/View/Prompt/prompt_screen.dart';
 import '../../core/Widget/dropdown-button.dart';

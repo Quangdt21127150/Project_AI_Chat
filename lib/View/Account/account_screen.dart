@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_ai_chat/constants/colors.dart';
 
-import '../../UpgradeAccount/upgrade_account.dart';
+import '../UpgradeAccount/upgrade_account.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
