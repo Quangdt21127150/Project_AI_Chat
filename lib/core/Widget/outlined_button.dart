@@ -22,8 +22,8 @@ class OutlinedButtonCustom extends StatelessWidget {
       icon: icon ?? SizedBox.shrink(), // Nếu không có icon, sử dụng SizedBox.shrink()
       style: OutlinedButton.styleFrom(
         shape: RoundedRectangleBorder(),
-        foregroundColor: tSecondaryColor,
-        side: BorderSide(color: tSecondaryColor),
+        foregroundColor: secondaryColor,
+        side: BorderSide(color: secondaryColor),
         padding: EdgeInsets.symmetric(vertical: tButtonHeight),
       ),
       onPressed: onPressed,

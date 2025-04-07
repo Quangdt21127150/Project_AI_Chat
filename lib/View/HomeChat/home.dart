@@ -12,9 +12,10 @@ import 'package:provider/provider.dart';
 import 'package:project_ai_chat/core/Widget/dropdown-button.dart';
 import 'package:project_ai_chat/viewmodels/aichat_list_view_model.dart';
 import 'package:project_ai_chat/viewmodels/homechat_view_model.dart';
-import '../BottomSheet/Widgets/PromptDetailsBottomSheet/prompt_details_bottom_sheet.dart';
-import '../BottomSheet/custom_bottom_sheet.dart';
+import '../../models/prompt.dart';
 import '../EmailChat/email.dart';
+import '../Prompt/prompt_screen.dart';
+import '../Prompt/widgets/prompt_details.dart';
 import 'Widgets/BottomNavigatorBarCustom/bottom_navigation.dart';
 import 'Widgets/Menu/menu.dart';
 import '../../models/ai_logo.dart';
@@ -104,7 +105,10 @@ class _HomeChatState extends State<HomeChat> {
       _selectedBottomItemIndex = index;
     });
     if (index == 2) {
-      CustomBottomSheet.show(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const PromptScreen()),
+      );
     } else if (index == 1) {
       Navigator.push(
         context,
@@ -113,7 +117,7 @@ class _HomeChatState extends State<HomeChat> {
     } else if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const AccountScreent()),
+        MaterialPageRoute(builder: (context) => const AccountScreen()),
       );
     }
   }
@@ -267,6 +271,26 @@ class _HomeChatState extends State<HomeChat> {
     }
   }
 
+  void _openPromptDetailsDialog(BuildContext context, Prompt prompt) {
+    PromptDetails.show(
+      context,
+      itemTitle: prompt.title,
+      content: prompt.content,
+      category: prompt.category,
+      description: prompt.description,
+      isPublic: prompt.isPublic,
+      isFavorite: prompt.isFavorite,
+    ).then((result) {
+      if (result != null) {
+        setState(() {
+          if (result.contains('Respond in')) {
+            print('Sending: $result');
+          }
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -388,7 +412,7 @@ class _HomeChatState extends State<HomeChat> {
                                         onTap: () {
                                           _controller.text = "";
                                           _showSlash = false;
-                                          PromptDetailsBottomSheet.show(
+                                          _openPromptDetailsDialog(
                                               context, promptList.allprompts.items[index]);
                                         },
                                       );

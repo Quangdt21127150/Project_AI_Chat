@@ -12,7 +12,6 @@ import 'package:project_ai_chat/View/HomeChat/Widgets/BottomNavigatorBarCustom/b
 import 'package:project_ai_chat/View/HomeChat/home.dart';
 
 import '../../Account/pages/account_screent.dart';
-import '../../BottomSheet/custom_bottom_sheet.dart';
 
 class BotScreen extends StatefulWidget {
   const BotScreen({super.key});
