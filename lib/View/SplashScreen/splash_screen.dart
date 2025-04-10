@@ -94,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   height: tSplashContainerSize,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                    color: primaryColor,
+                    color: tPrimaryColor,
                   ),
                 ),
               ),

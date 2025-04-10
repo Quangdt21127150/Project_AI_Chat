@@ -8,19 +8,19 @@ class TTextFormFieldTheme {
   
   static InputDecorationTheme lightInputDecorationTheme = const InputDecorationTheme(
     border: OutlineInputBorder(),
-    prefixIconColor: secondaryColor,
-    floatingLabelStyle: TextStyle(color: secondaryColor),
+    prefixIconColor: tSecondaryColor,
+    floatingLabelStyle: TextStyle(color: tSecondaryColor),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 2, color: secondaryColor),
+      borderSide: BorderSide(width: 2, color: tSecondaryColor),
     )
   );
 
   static InputDecorationTheme darkInputDecorationTheme = const InputDecorationTheme(
       border: OutlineInputBorder(),
-      prefixIconColor: primaryColor,
-      floatingLabelStyle: TextStyle(color: primaryColor),
+      prefixIconColor: tPrimaryColor,
+      floatingLabelStyle: TextStyle(color: tPrimaryColor),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(width: 2, color: primaryColor),
+        borderSide: BorderSide(width: 2, color: tPrimaryColor),
       )
   );
 }

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
 
   const CustomBottomNavigationBar({
-    super.key,
+    Key? key,
     required this.currentIndex,
     required this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,19 +17,19 @@ class CustomBottomNavigationBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.chat_bubble_outline),
+          icon: Icon(Icons.chat),
           label: 'Chat',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.lightbulb_outline),
-          label: 'Bot AI',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.list),
+          icon: Icon(FontAwesomeIcons.list),
           label: 'Prompt',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
+          icon: Icon(FontAwesomeIcons.robot),
+          label: 'Bot AI',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
           label: 'Information',
         ),
       ],

@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:project_ai_chat/View/Knowledge/page/knowledge_screen.dart';
 import 'package:project_ai_chat/models/ai_logo.dart';
-import 'package:project_ai_chat/viewmodels/auth_view_model.dart';
+import 'package:project_ai_chat/View/Knowledge/page/knowledge_screen.dart';
 import 'package:provider/provider.dart';
 import '../../../../viewmodels/homechat_view_model.dart';
-import '../../../Login/login_screen.dart';
 import '../../../UpgradeVersion/upgrade_version.dart';
 import '../../../../viewmodels/aichat_list_view_model.dart';
-import 'package:project_ai_chat/constants/colors.dart';
 
 class Menu extends StatefulWidget {
   const Menu({Key? key}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() => _MenuState();
 }
@@ -21,7 +17,8 @@ class _MenuState extends State<Menu> {
   int _selectedIndex = -1;
   late final AIChatList aiChatList;
   late AIItem currentAI;
-  late ScrollController _scrollController;
+  late ScrollController
+      _scrollController; // variable for load more conversation
 
   @override
   void initState() {
@@ -31,10 +28,15 @@ class _MenuState extends State<Menu> {
 
     _scrollController = ScrollController()
       ..addListener(() {
+        // Khi cuộn đến cuối danh sách
         if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
           Provider.of<MessageModel>(context, listen: false)
-              .fetchAllConversations(currentAI.id, 'dify', isLoadMore: true);
+              .fetchAllConversations(
+            currentAI.id,
+            'dify',
+            isLoadMore: true,
+          ); // Gọi Load More
         }
       });
   }
@@ -44,353 +46,203 @@ class _MenuState extends State<Menu> {
     return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
   }
 
-  Future<void> _logout() async {
-    // Logic logout từ code cũ
-    await Provider.of<AuthViewModel>(context, listen: false).logout();
-    if (mounted) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-            (Route<dynamic> route) => false,
-      );
-    }
-  }
+  // Future<void> _loadConversations() async {
+  //   try {
+  //     await Provider.of<MessageModel>(context, listen: false)
+  //         .fetchAllConversations(currentAI.id, 'dify');
+  //   } catch (e) {
+  //     print("error: $e");
+  //   }
+  // }
 
+  void _logout() async {}
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.blue[50]!, Colors.white],
-          ),
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+      child: Column(
+        children: [
+          SizedBox(
+            child: DrawerHeader(
               decoration: BoxDecoration(
-                color: primaryColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+                color: Colors.blue[100],
               ),
               child: Column(
                 children: [
+                  const SizedBox(
+                    height: 15,
+                  ),
                   Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Image.asset("assets/logoAI.png", height: 48),
+                      Image.asset(
+                        "assets/logoAI.png",
+                        height: 60,
                       ),
-                      const SizedBox(width: 16),
-                      const Flexible(
-                        child: Text(
-                          "JarvisCopi",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 26,
-                            letterSpacing: 0.5,
-                          ),
-                          overflow: TextOverflow.ellipsis,
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        "Ami Assistant",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  ElevatedButton.icon(
-                    onPressed: _logout,
-                    icon: const Icon(Icons.logout, size: 18, color: Colors.white),
-                    label: const Text("Logout"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red[400],
-                      foregroundColor: Colors.white,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                    ),
-                  ),
                 ],
               ),
             ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  const SizedBox(height: 16),
-                  _buildMainMenuSection(),
-                  const Divider(height: 32),
-                  _buildConversationsSection(),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMainMenuSection() {
-    return Column(
-      children: [
-        _buildMenuItemCard(
-          icon: Icons.book_outlined,
-          title: "Knowledge Management",
-          index: 1,
-          color: Colors.indigo,
-        ),
-        _buildMenuItemCard(
-          icon: Icons.workspace_premium,
-          title: "Upgrade Version",
-          index: 2,
-          color: Colors.amber[700]!,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildConversationsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              const Expanded(
-                child: Text(
-                  'All Conversations',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.search, color: Colors.black54),
-                onPressed: () {},
-                constraints: const BoxConstraints(),
-                padding: const EdgeInsets.all(8),
-              ),
-            ],
           ),
-        ),
-        Consumer<MessageModel>(
-          builder: (context, messageModel, child) {
-            if (messageModel.isLoading && messageModel.conversations.isEmpty) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (messageModel.errorMessage != null &&
-                messageModel.conversations.isEmpty) {
-              return Center(
-                child: Text(
-                  messageModel.errorMessage ?? 'Server error, please try again',
-                  style: const TextStyle(color: Colors.red, fontSize: 16),
-                ),
-              );
-            }
-
-            return ListView.builder(
-              controller: _scrollController,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: messageModel.conversations.length +
-                  (messageModel.hasMoreConversation ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == messageModel.conversations.length) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-                final conversation = messageModel.conversations[index];
-                return _buildConversationItem(conversation, index, messageModel);
-              },
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMenuItemCard({
-    required IconData icon,
-    required String title,
-    required int index,
-    required Color color,
-  }) {
-    final isSelected = index == _selectedIndex;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Card(
-        elevation: isSelected ? 4 : 1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(
-            color: isSelected ? color : Colors.transparent,
-            width: 2,
+          _buildWidgetItem(Icons.smart_button, "Prompt Management", 0),
+          _buildWidgetItem(Icons.play_lesson, "Knowledge Management", 1),
+          _buildWidgetItem(Icons.verified_sharp, "Upgrade Version", 2),
+          const Divider(
+            height: 0.5,
+            color: Color.fromRGBO(2, 13, 82, 1.0),
           ),
-        ),
-        child: InkWell(
-          onTap: () {
-            setState(() {
-              _selectedIndex = index;
-            });
-            if (index == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const KnowledgeScreen()),
-              );
-            } else if (index == 2) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => UpgradeVersion()),
-              );
-            }
-          },
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          const Padding(
+            padding: EdgeInsets.all(10),
             child: Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(icon, color: color),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontWeight:
-                      isSelected ? FontWeight.bold : FontWeight.normal,
-                      fontSize: 16,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                Text(
+                  'All conversations',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+                Spacer(),
                 Icon(
-                  Icons.chevron_right,
-                  color: Colors.grey[400],
-                  size: 20,
+                  Icons.search,
                 ),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildConversationItem(dynamic conversation, int index, MessageModel messageModel) {
-    String previewText = conversation.title.isNotEmpty
-        ? conversation.title.substring(
-        0, conversation.title.length > 30 ? 30 : conversation.title.length)
-        : "Empty conversation";
-    if (previewText.length == 30) previewText += "...";
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      child: Card(
-        elevation: 0,
-        color: Colors.grey[50],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-          side: BorderSide(color: Colors.grey[200]!, width: 1),
-        ),
-        child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          leading: CircleAvatar(
-            backgroundColor: Colors.black,
-            child: Text(
-              "${index + 1}",
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-          title: Text(
-            "Conversation ${index + 1}",
-            style: const TextStyle(fontWeight: FontWeight.w500),
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Text(
-              "$previewText\n${_formatTimestamp(conversation.createdAt)}",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
-            ),
-          ),
-          trailing: IconButton(
-            icon: Icon(Icons.delete, color: Colors.red[300], size: 20),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Delete Conversation"),
-                  content: const Text(
-                      "Are you sure you want to delete this conversation?"),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancel"),
+          Expanded(
+            child: Consumer<MessageModel>(
+              builder: (context, messageModel, child) {
+                if (messageModel.isLoading &&
+                    messageModel.conversations.isEmpty) {
+                  // Display loading indicator while fetching conversations
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (messageModel.errorMessage != null &&
+                    messageModel.conversations.isEmpty) {
+                  // Display error message if there's an error
+                  return Center(
+                    child: Text(
+                      messageModel.errorMessage ??
+                          'Server error, please try again',
+                      style: const TextStyle(color: Colors.red, fontSize: 16),
                     ),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     messageModel.deleteConversation(index);
-                    //     Navigator.pop(context);
-                    //   },
-                    //   child: const Text("Delete",
-                    //       style: TextStyle(color: Colors.red)),
-                    // ),
-                  ],
-                ),
-              );
-            },
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
+                  );
+                }
+
+                return ListView.builder(
+                  controller: _scrollController,
+                  shrinkWrap: true,
+                  itemCount: messageModel.conversations.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == messageModel.conversations.length) {
+                      // Loader khi đang tải thêm
+                      if (messageModel.hasMoreConversation) {
+                        return const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      } else {
+                        return const SizedBox.shrink(); // Không còn dữ liệu
+                      }
+                    }
+                    final conversation = messageModel.conversations[index];
+                    return ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            conversation.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            _formatTimestamp(conversation.createdAt),
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      onTap: () async {
+                        // Lấy assistantId từ currentAI
+                        final assistantId = currentAI.id;
+
+                        // Gọi loadConversationHistory
+                        await Provider.of<MessageModel>(context, listen: false)
+                            .loadConversationHistory(
+                                assistantId, conversation.id);
+
+                        Navigator.pop(context); // Đóng drawer
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           ),
-          onTap: () async {
-            await Provider.of<MessageModel>(context, listen: false)
-                .loadConversationHistory(currentAI.id, conversation.id);
-            Navigator.pop(context);
-          },
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWidgetItem(IconData icon, String title, int index) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+        if (index == 2) {
+          // Assuming "Upgrade Version" is at index 3
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UpgradeVersion()),
+          );
+        } else if (index == 1) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const KnowledgeScreen()),
+          );
+        }
+      },
+      child: Container(
+        color: (index == (_selectedIndex)) ? Colors.grey[400] : null,
+        child: ListTile(
+          leading: Icon(icon),
+          title: Text(title),
         ),
       ),
     );
   }
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
+  Widget _buildButtonItem({
+    required String title,
+    required VoidCallback onPressed,
+  }) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            backgroundColor: const Color.fromRGBO(69, 37, 229, 1.0),
+            side: const BorderSide(
+              width: 0.5,
+              color: Colors.grey,
+            )),
+        child: Text(
+          title,
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+    );
   }
 }

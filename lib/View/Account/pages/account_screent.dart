@@ -8,14 +8,14 @@ import 'package:project_ai_chat/viewmodels/auth_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AccountScreen extends StatefulWidget {
-  const AccountScreen({super.key});
+class AccountScreent extends StatefulWidget {
+  const AccountScreent({super.key});
 
   @override
-  State<AccountScreen> createState() => _AccountScreenState();
+  State<AccountScreent> createState() => _AccountScreentState();
 }
 
-class _AccountScreenState extends State<AccountScreen> {
+class _AccountScreentState extends State<AccountScreent> {
   // @override
   // void initState() {
   //   super.initState();
