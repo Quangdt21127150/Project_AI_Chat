@@ -14,6 +14,27 @@ class AuthViewModel extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
   User? get user => _user;
 
+  //Version
+  String _versionName = " ";
+  String get versionName => _versionName;
+
+  //Remaining tokens
+  int? _remainingTokens;
+  int? get remainingTokens => _remainingTokens;
+  set remainingTokens(int? value) {
+    _remainingTokens = value;
+    notifyListeners();
+  }
+
+  //Max tokens
+  int? _maxTokens;
+  int? get maxTokens => _maxTokens;
+  set maxTokens(int? value) {
+    _maxTokens = value;
+    notifyListeners();
+  }
+
+  final int unlimited = 99999;
   Future<bool> register({
     required String username,
     required String email,
@@ -79,6 +100,28 @@ class AuthViewModel extends ChangeNotifier {
               'refreshToken', response.data['token']['refreshToken']);
         }
 
+        // Lấy accestoken knowledge base server
+        final responseKB = await _authService
+            .loginFromExternalClient(response.data['token']?['accessToken']);
+
+        if (responseKB.success && responseKB.data != null) {
+          // Lưu access token knowledgebase server
+          if (responseKB.data['token']?['accessToken'] != null) {
+            await prefs.setString(
+                'kbAccessToken', responseKB.data['token']['accessToken']);
+          }
+          // Lưu refresh token knowledgebase server
+          if (responseKB.data['token']?['refreshToken'] != null) {
+            await prefs.setString(
+                'kbRefreshToken', responseKB.data['token']['refreshToken']);
+          }
+        } else {
+          error = response.message ?? 'Đăng nhập thất bại';
+          isLoading = false;
+          notifyListeners();
+          return false;
+        }
+
         isLoading = false;
         notifyListeners();
         return true;
@@ -138,5 +181,31 @@ class AuthViewModel extends ChangeNotifier {
     _isLoggedIn = false;
     _user = null;
     notifyListeners();
+  }
+
+  Future<void> loadSubscriptionDetails() async {
+    try {
+      final subscriptionDetails = await _authService.fetchSubscriptionDetails();
+      _versionName = subscriptionDetails.name;
+      notifyListeners();
+    } catch (e) {
+      print('Lỗi khi lấy thông tin subscription: $e');
+    }
+  }
+
+  Future<void> fetchTokens() async {
+    try {
+      final tokenUsageResponse = await _authService.fetchTokenUsage();
+      if (tokenUsageResponse.unlimited) {
+        maxTokens = unlimited;
+        return;
+      } else {
+        maxTokens = tokenUsageResponse.totalTokens;
+        _remainingTokens = tokenUsageResponse.availableTokens;
+      }
+      notifyListeners();
+    } catch (e) {
+      print('❌ Error fetching token usage: $e');
+    }
   }
 }

@@ -1,89 +1,9 @@
-// import 'package:dio/dio.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:uuid/uuid.dart';
-//
-// class PromptService {
-//   final Dio dio;
-//   final SharedPreferences prefs;
-//
-//   PromptService({required this.dio, required this.prefs}) {
-//     // Thiết lập base URL và interceptors
-//     dio.options.baseUrl = 'https://api.dev.jarvis.cx';
-//     dio.interceptors.add(InterceptorsWrapper(
-//       onRequest: (options, handler) async {
-//         // Thêm headers
-//         final token = prefs.getString('token');
-//         options.headers['Authorization'] = 'Bearer $token';
-//         options.headers['x-jarvis-guid'] = const Uuid().v4();
-//         return handler.next(options);
-//       },
-//     ));
-//   }
-//
-//   Future<List<dynamic>> fetchPrompts({
-//     String? query,
-//     String? category,
-//     bool? isFavorite,
-//     bool? isPublic,
-//     int? limit,
-//     int? offset,
-//   }) async {
-//     try {
-//       final requestData = {
-//         if (query != null) 'query': query,
-//         if (category != null) 'category': category,
-//         if (isFavorite != null) 'isFavorite': isFavorite,
-//         if (isPublic != null) 'isPublic': isPublic,
-//         if (limit != null) 'limit': limit,
-//         if (offset != null) 'offset': offset,
-//       };
-//
-//       print('🚀 REQUEST DATA: $requestData');
-//
-//       final response = await dio.post(
-//         '/api/v1/prompts',
-//         data: requestData,
-//       );
-//
-//       print('✅ RESPONSE DATA: ${response.data}');
-//       return response.data['results']; // Điều chỉnh theo response thực tế
-//     } on DioException catch (e) {
-//       print('❌ DioException:');
-//       print('Status: ${e.response?.statusCode}');
-//       print('Data: ${e.response?.data}');
-//       print('Message: ${e.message}');
-//
-//       throw Exception(
-//         e.response?.data?['message'] ?? e.message ?? 'Lỗi kết nối tới server',
-//       );
-//     }
-//   }
-// }
-
 import 'package:dio/dio.dart';
 import 'package:project_ai_chat/models/prompt_model.dart';
 import 'package:project_ai_chat/utils/dio/dio_client.dart';
 import 'package:project_ai_chat/models/prompt_list.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 class PromptService {
-  // final Dio dio;
-  // final SharedPreferences prefs;
-  //
-  // PromptService({required this.dio, required this.prefs}) {
-  //   // Thiết lập base URL và interceptors
-  //   dio.options.baseUrl = 'https://api.dev.jarvis.cx';
-  //   dio.interceptors.add(InterceptorsWrapper(
-  //     onRequest: (options, handler) async {
-  //       // Thêm headers
-  //       final token = prefs.getString('token');
-  //       options.headers['Authorization'] = 'Bearer $token';
-  //       options.headers['x-jarvis-guid'] = const Uuid().v4();
-  //       return handler.next(options);
-  //     },
-  //   ));
-  // }
 
   final dio = DioClient().dio;
 

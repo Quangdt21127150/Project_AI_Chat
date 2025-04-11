@@ -28,3 +28,6 @@ const String tDontHaveAnAccount = "Don't have an Account?";
 const String tRegisterTitle = "Get On Broad!";
 const String tRegisterSubTitle = "Create your profile to start your Journey";
 const String tAlreadyHaveAnAccount = "Already have an Account?";
+
+//Link upgrade
+const String linkUpgrade = 'https://admin.dev.jarvis.cx/pricing/overview';

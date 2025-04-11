@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:project_ai_chat/models/prompt.dart';
 
 // Model cho PromptList
@@ -16,7 +14,7 @@ class PromptList {
         items = [],
         limit = 0,
         offset = 0,
-        total = 0;
+        total = -1;
 
   PromptList({
     required this.hasNext,

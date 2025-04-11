@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_ai_chat/models/ai_logo.dart';
 import 'package:project_ai_chat/models/response/assistant_response.dart';
+import 'package:project_ai_chat/models/response/chat_response.dart';
 import 'package:project_ai_chat/utils/exceptions/chat_exception.dart';
 import 'package:project_ai_chat/models/conversation_model.dart';
 import 'package:project_ai_chat/models/response/message_response.dart';
@@ -11,7 +12,8 @@ class MessageModel extends ChangeNotifier {
   final List<Conversation> _conversations = [];
   final ChatService _chatService;
   String? _currentConversationId;
-  int? _remainingUsage;
+  int _remainingUsage = 30;
+  int? _maxTokens;
   bool _isLoading = false;
   String? _errorMessage;
   bool _isSending = false;
@@ -24,7 +26,8 @@ class MessageModel extends ChangeNotifier {
   // Thêm biến để theo dõi trạng thái gửi tin nhắn đầu tiên
   bool _isFirstMessageSent = false;
 
-  int? get remainingUsage => _remainingUsage;
+  int get remainingUsage => _remainingUsage;
+  int? get maxTokens => _maxTokens;
   List<Message> get messages => _messages;
   List<Conversation> get conversations => _conversations;
   bool get isLoading => _isLoading;
@@ -33,6 +36,9 @@ class MessageModel extends ChangeNotifier {
 
   // load more conversations
   bool get hasMoreConversation => _hasMoreConversation;
+
+  //Định nghĩa cho tối đa tokens
+  final int unlimitedTokens = 99999;
 
   Future<void> initializeChat(String assistantId) async {
     try {
@@ -97,7 +103,7 @@ class MessageModel extends ChangeNotifier {
     if (conversations.isEmpty)
       initializeChat(assistantId);
     else {
-      loadConversationHistory(assistantId, conversations.first.id);
+      loadConversationHistory(assistantId, conversations.first.id, isClearMessage: false);
     }
   }
 
@@ -162,13 +168,13 @@ class MessageModel extends ChangeNotifier {
     return url.replaceAll(RegExp(r'^(https?:\/\/)?(www\.)?'), '');
   }
 
-  Future<void> sendMessage(String content, AIItem assistant) async {
+  Future<void> sendMessage(String content, AIItem assistant,
+      {List<String>? imagePaths}) async {
     try {
       _isSending = true;
 
       // Nếu đây là tin nhắn đầu tiên, gọi createNewChat
       if (!_isFirstMessageSent) {
-        _messages.clear();
         _messages.add(Message(
           role: 'user',
           content: content,
@@ -200,6 +206,7 @@ class MessageModel extends ChangeNotifier {
       _messages.add(Message(
         role: 'user',
         content: content,
+        imagePaths: imagePaths,
         assistant: Assistant(
           id: assistant.id,
           model: "dify",
@@ -220,14 +227,24 @@ class MessageModel extends ChangeNotifier {
         isErrored: false,
       ));
       notifyListeners();
-
-      final response = await _chatService.sendMessage(
-        content: content,
-        assistantId: assistant.id,
-        conversationId: _currentConversationId,
-        previousMessages: _messages,
-      );
-
+      ChatResponse response;
+      // Gửi tin nhắn hoặc hình ảnh
+      if (imagePaths != null && imagePaths.isNotEmpty) {
+        response = await _chatService.sendImageMessages(
+          content: content,
+          imagePaths: imagePaths,
+          assistantId: assistant.id,
+          conversationId: _currentConversationId,
+          previousMessages: _messages,
+        );
+      } else {
+        response = await _chatService.sendMessage(
+          content: content,
+          assistantId: assistant.id,
+          conversationId: _currentConversationId,
+          previousMessages: _messages,
+        );
+      }
       // Xử lý response.message để thêm bullet points và format markdown
       String processedMessage = response.message;
 
@@ -335,7 +352,7 @@ class MessageModel extends ChangeNotifier {
   }
 
   Future<void> loadConversationHistory(
-      String assistantId, String conversationId) async {
+      String assistantId, String conversationId,{bool? isClearMessage}) async {
     try {
       _isLoading = true;
       notifyListeners();
@@ -344,8 +361,10 @@ class MessageModel extends ChangeNotifier {
         conversationId: conversationId,
         assistantId: assistantId,
       );
-
-      _messages.clear(); // Xóa tin nh���n cũ trước khi thêm lịch sử mới
+      if(isClearMessage == true || isClearMessage == null){
+        _messages.clear();
+      }
+      // Xóa tin nhắn cũ trước khi thêm lịch sử mới
       _currentConversationId =
           conversationId; // Cập nhật ID cuộc hội thoại hiện tại
 
@@ -391,19 +410,19 @@ class MessageModel extends ChangeNotifier {
   Future<void> updateRemainingUsage() async {
     try {
       final tokenUsageResponse = await _chatService.fetchTokenUsage();
-      if (tokenUsageResponse.availableTokens >= 0) {
-        _remainingUsage = tokenUsageResponse.availableTokens;
-        print('✅ Token usage fetched successfully: $_remainingUsage');
+      if (tokenUsageResponse.unlimited) {
+        _maxTokens = unlimitedTokens;
+        return;
       } else {
-        print(
-            '❌ Token usage is invalid: ${tokenUsageResponse.availableTokens}');
-        _errorMessage = 'Số lượng token không hợp lệ';
+        _remainingUsage = tokenUsageResponse.availableTokens;
+        _maxTokens = null;
+        print('✅ Token usage fetched successfully: $_remainingUsage');
       }
       notifyListeners();
     } catch (e) {
       print('❌ Error fetching token usage: $e');
       if (e is ChatException) {
-        _errorMessage = e.message;
+        //_errorMessage = e.message;
         notifyListeners();
       }
     }

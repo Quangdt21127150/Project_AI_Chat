@@ -3,7 +3,6 @@ import 'package:project_ai_chat/models/response/api_response.dart';
 import 'package:project_ai_chat/utils/exceptions/chat_exception.dart';
 import 'package:project_ai_chat/models/response/chat_response.dart';
 import 'package:project_ai_chat/models/response/conversation_history_response.dart';
-
 import 'package:project_ai_chat/models/response/message_response.dart';
 import 'package:project_ai_chat/models/response/token_usage_response.dart';
 import 'package:project_ai_chat/utils/dio/dio_client.dart';
@@ -50,6 +49,86 @@ class ChatService {
       final response = await dio.post(
         '/ai-chat/messages',
         data: requestData,
+      );
+
+      print('✅ RESPONSE DATA: ${response.data}');
+
+      return ChatResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      print('❌ DioException:');
+      print('Status: ${e.response?.statusCode}');
+      print('Data: ${e.response?.data}');
+      print('Message: ${e.message}');
+
+      throw ChatException(
+        message: e.response?.data?['message'] ??
+            e.message ??
+            'Lỗi kết nối tới server',
+        statusCode: e.response?.statusCode ?? 500,
+      );
+    }
+  }
+
+  Future<ChatResponse> sendImageMessages({
+    required String content,
+    required List<String> imagePaths,
+    required String assistantId,
+    String? conversationId,
+    List<Message>? previousMessages,
+  }) async {
+    try {
+      // Tạo FormData để gửi hình ảnh và nội dung
+      final formData = FormData();
+
+      // Thêm nội dung vào formData
+      formData.fields.add(MapEntry('content', content));
+      formData.fields.add(MapEntry('assistantId', assistantId));
+      formData.fields
+          .add(MapEntry('conversation', conversationId ?? const Uuid().v4()));
+
+      // Thêm metadata cho previousMessages
+      formData.fields.add(MapEntry(
+          'messages',
+          previousMessages?.map((msg) => msg.toJson()).toList().toString() ??
+              ''));
+
+      // Thêm hình ảnh vào formData
+      for (var path in imagePaths) {
+        formData.files
+            .add(MapEntry('files', await MultipartFile.fromFile(path)));
+      }
+
+      // Thêm metadata cho assistant
+      formData.fields.add(MapEntry('assistant',
+          '{"id": "$assistantId", "model": "dify", "name": "Claude 3 Haiku"}'));
+
+      // final requestData = {
+      //   "content": content,
+      //   "metadata": {
+      //     "conversation": {
+      //       "id": conversationId ?? const Uuid().v4(),
+      //       "messages":
+      //           previousMessages?.map((msg) => msg.toJson()).toList() ?? [],
+      //     }
+      //   },
+      //   "assistant": {
+      //     "id": assistantId,
+      //     "model": "dify",
+      //     "name": "Claude 3 Haiku"
+      //   },
+      //   "files": [] // Khởi tạo mảng files
+      // };
+
+      // // Thêm hình ảnh vào mảng files
+      // for (var path in imagePaths) {
+      //   (requestData['files'] as List)
+      //       .add(path); // Thêm đường dẫn hình ảnh vào mảng
+      // }
+      print('🚀 REQUEST DATA: $formData');
+
+      final response = await dio.post(
+        '/ai-chat/messages',
+        data: formData,
       );
 
       print('✅ RESPONSE DATA: ${response.data}');
