@@ -148,9 +148,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       style: ElevatedButton.styleFrom(
                         elevation: 0,
                         shape: RoundedRectangleBorder(),
-                        foregroundColor: tWhiteColor,
-                        backgroundColor: tSecondaryColor,
-                        side: BorderSide(color: tSecondaryColor),
+                        foregroundColor: whiteColor,
+                        backgroundColor: secondaryColor,
+                        side: BorderSide(color: secondaryColor),
                         padding: EdgeInsets.symmetric(vertical: tButtonHeight),
                       ),
                       onPressed: context.watch<AuthViewModel>().isLoading

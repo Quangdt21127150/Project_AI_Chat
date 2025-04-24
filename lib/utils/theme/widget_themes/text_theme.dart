@@ -7,27 +7,27 @@ class TTextTheme {
 
   static TextTheme lightTextTheme = TextTheme(
     headlineLarge: GoogleFonts.montserrat(
-      color: tDarkColor,
+      color: darkColor,
       fontSize: 28,
       fontWeight: FontWeight.bold,
     ),
     headlineMedium: GoogleFonts.montserrat(
-      color: tDarkColor,
+      color: darkColor,
       fontSize: 24,
       fontWeight: FontWeight.w700,
     ),
     headlineSmall: GoogleFonts.poppins(
-      color: tSecondaryColor,
+      color: secondaryColor,
       fontSize: 22,
       fontWeight: FontWeight.w500,
     ),
     bodyLarge: GoogleFonts.poppins(
-      color: tSecondaryColor,
+      color: secondaryColor,
       fontSize: 16,
       fontWeight: FontWeight.normal,
     ),
     bodyMedium: GoogleFonts.poppins(
-      color: tDarkColor,
+      color: darkColor,
       fontSize: 14,
       fontWeight: FontWeight.normal,
     ),
@@ -35,27 +35,27 @@ class TTextTheme {
 
   static TextTheme darkTextTheme = TextTheme(
     headlineLarge: GoogleFonts.montserrat(
-      color: tWhiteColor,
+      color: whiteColor,
       fontSize: 28,
       fontWeight: FontWeight.bold,
     ),
     headlineMedium: GoogleFonts.montserrat(
-      color: tWhiteColor,
+      color: whiteColor,
       fontSize: 24,
       fontWeight: FontWeight.w700,
     ),
     headlineSmall: GoogleFonts.poppins(
-      color: tWhiteColor,
+      color: whiteColor,
       fontSize: 24,
       fontWeight: FontWeight.w700,
     ),
     bodyLarge: GoogleFonts.poppins(
-      color: tWhiteColor,
+      color: whiteColor,
       fontSize: 16,
       fontWeight: FontWeight.normal,
     ),
     bodyMedium: GoogleFonts.poppins(
-      color: tWhiteColor,
+      color: whiteColor,
       fontSize: 14,
       fontWeight: FontWeight.normal,
     ),
