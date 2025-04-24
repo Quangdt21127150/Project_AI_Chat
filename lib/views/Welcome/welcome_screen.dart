@@ -15,56 +15,73 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     var height = mediaQuery.size.height;
+    var width = mediaQuery.size.width;
     var brightness = mediaQuery.platformBrightness;
     var isDarkMode = brightness == Brightness.dark;
 
     return Scaffold(
-        backgroundColor: isDarkMode ? secondaryColor : primaryColor,
-        body: Container(
+      backgroundColor: isDarkMode ? secondaryColor : primaryColor,
+      body: Center(
+        child: Container(
           padding: EdgeInsets.all(tDefaultSize),
+          width: width * 0.9,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Image(
-                  image: AssetImage(tWelcomeScreenImage), height: height * 0.5),
+                image: AssetImage(welcomeScreenImage),
+                height: height * 0.5,
+              ),
               Column(
                 children: [
-                  Text(tWelcomeTitle,
-                      style: Theme.of(context).textTheme.headlineSmall),
-                  Text(tWelcomeSubTitle,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                      textAlign: TextAlign.center),
+                  Text(
+                    welcomeString,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  Text(
+                    welcomeSubtitleString,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
-              Row(
+              Column(
                 children: [
-                  Expanded(
-                      child: OutlinedButtonCustom(
-                    onPressed: () {
-                      Navigator.pushReplacement(
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButtonCustom(
+                      onPressed: () {
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
-                    },
-                    label: tLogin.toUpperCase(),
-                  )),
-                  const SizedBox(
-                    width: 10,
+                            builder: (context) => LoginScreen(),
+                          ),
+                        );
+                      },
+                      label: loginString.toUpperCase(),
+                    ),
                   ),
-                  Expanded(
-                      child: ElevatedButtonCustom(
-                    text: tRegister.toUpperCase(),
-                    onPressed: () {
-                      Navigator.pushReplacement(
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButtonCustom(
+                      text: registerString.toUpperCase(),
+                      onPressed: () {
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RegisterScreen()));
-                    },
-                  )),
+                            builder: (context) => RegisterScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
-              )
+              ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

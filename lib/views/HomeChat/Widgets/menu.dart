@@ -47,6 +47,7 @@ class _MenuState extends State<Menu> {
     final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
     return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
   }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -70,7 +71,7 @@ class _MenuState extends State<Menu> {
                         width: 10,
                       ),
                       const Text(
-                        "Ami Assistant",
+                        "JarvisCopi Assistant",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -167,7 +168,8 @@ class _MenuState extends State<Menu> {
                         await Provider.of<MessageModel>(context, listen: false)
                             .loadConversationHistory(
                                 assistantId, conversation.id);
-                        Provider.of<BotViewModel>(context, listen: false).isChatWithMyBot = false;
+                        Provider.of<BotViewModel>(context, listen: false)
+                            .isChatWithMyBot = false;
 
                         Navigator.pop(context); // Đóng drawer
                       },
@@ -188,16 +190,15 @@ class _MenuState extends State<Menu> {
         setState(() {
           _selectedIndex = index;
         });
-        if (index == 2){
+        if (index == 2) {
           final Uri url = Uri.parse(linkUpgrade);
           if (await canLaunchUrl(url)) {
             await launchUrl(url);
           } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-            content: Text('Cannot open link!')),
-           );
-        }
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Cannot open link!')),
+            );
+          }
         } else if (index == 1) {
           Navigator.push(
             context,

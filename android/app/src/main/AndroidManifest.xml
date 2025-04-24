@@ -3,7 +3,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="Ami Assistant"
+        android:label="JarvisCopi Assistant"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

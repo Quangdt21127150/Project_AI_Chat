@@ -1,33 +1,33 @@
 
 // -- Generic Text
-const String tLogin = "Login";
-const String tRegister = "Register";
-const String tEmail = "E-Mail";
-const String tPassword = "Password";
-const String tForgetPassword = "Forget Password?";
-const String tSignInWithGoogle = "Sign-In with Google";
-const String tFullName = "Full Name";
-const String tPhoneNo = "Phone No";
+const String loginString = "Login";
+const String registerString = "Register";
+const String emailString = "Email";
+const String passwordString = "Password";
+const String forgetPasswordString = "Forget Password?";
+const String loginWithGoogleString = "Login with Google";
+const String fullNameString = "Full Name";
+const String phoneNumberString = "Phone Number";
 
 
 // -- Splash Screen Text
-const String tAppName = "Ami";
-const String tAppTagLine = "Assistant \nManagement Intelligence";
+const String appNameString = "JarvisCopi";
+const String appTagLine = "Assistant \nManagement Intelligence";
 
 // -- Welcome Screen Text
-const String tWelcomeTitle = "Welcome to Ami!";
-const String tWelcomeSubTitle = "Your friendly AI companion for all your questions and conversations";
+const String welcomeString = "Welcome to JarvisCopi!";
+const String welcomeSubtitleString = "Your friendly AI companion for all your questions and conversations";
 
 // -- Login Screen Text
-const String tLoginTitle = "Welcome Back,";
-const String tLoginSubTitle = "Make it work, make it right, make it fast";
-const String tRememberMe = "Remember Me?";
-const String tDontHaveAnAccount = "Don't have an Account?";
+const String loginTitleString = "Welcome Back!";
+const String loginSubtitleString = "Login to your account";
+const String rememberMeString = "Remember Me?";
+const String notHaveAnAccountString = "Don't have an Account?";
 
 // -- Register Screen Text
-const String tRegisterTitle = "Get On Broad!";
-const String tRegisterSubTitle = "Create your profile to start your Journey";
-const String tAlreadyHaveAnAccount = "Already have an Account?";
+const String registerTitleString = "Let’s Get Started!";
+const String registerSubtitleString = "Sign up your account";
+const String alreadyHaveAnAccountString = "Already have an Account?";
 
 //Link upgrade
 const String linkUpgrade = 'https://admin.dev.jarvis.cx/pricing/overview';

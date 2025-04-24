@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_ai_chat/views/Login/login_screen.dart';
 import 'package:project_ai_chat/constants/colors.dart';
-import 'package:project_ai_chat/constants/image_strings.dart';
 import 'package:project_ai_chat/constants/sizes.dart';
 import 'package:project_ai_chat/constants/text_strings.dart';
-import 'package:project_ai_chat/core/Widget/outlined_button.dart';
 import 'package:project_ai_chat/viewmodels/auth_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:project_ai_chat/utils/validators/register_validator.dart';
@@ -38,13 +36,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _register() async {
     if (_formKey.currentState!.validate()) {
       final success = await context.read<AuthViewModel>().register(
-            username: _usernameController.text,
-            email: _emailController.text,
-            password: _passwordController.text,
-          );
+        username: _usernameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
 
       if (success && mounted) {
-        // Hiển thị thông báo thành công
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Registration successful! Please log in'),
@@ -52,13 +49,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         );
 
-        // Chuyển sang màn hình đăng nhập
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
       } else if (mounted) {
-        // Hiển thị thông báo lỗi
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -71,140 +66,148 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: SingleChildScrollView(
-          child: Container(
-        padding: const EdgeInsets.all(tDefaultSize),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // -- Section - 1 --
-            Image(
-              image: AssetImage(tWelcomeScreenImage),
-              height: size.height * 0.2,
-            ),
-            Text(
-              tRegisterTitle,
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-            Text(
-              tRegisterSubTitle,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            // -- .end - 1 --
-            SizedBox(height: tFormHeight),
-            Form(
-              key: _formKey,
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(tDefaultSize),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outline_rounded),
-                      label: Text('Username'),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please input username';
-                      }
-                      return null;
-                    },
+                  // -- Section - 1 --
+                  Text(
+                    registerTitleString,
+                    style: Theme.of(context).textTheme.headlineLarge,
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: tFormHeight - 20),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.email_outlined),
-                      label: Text('Email'),
-                    ),
-                    validator: _validateEmail,
+                  Text(
+                    registerSubtitleString,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: tFormHeight - 20),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.fingerprint),
-                      label: Text('Password'),
+                  const SizedBox(height: tFormHeight),
+                  // -- .end - 1 --
+
+                  // -- Section - 2 --
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TextFormField(
+                          controller: _usernameController,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.person_outline_rounded),
+                            label: Text(fullNameString),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please input username';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: tFormHeight - 20),
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.email_outlined),
+                            label: Text(emailString),
+                          ),
+                          validator: _validateEmail,
+                        ),
+                        const SizedBox(height: tFormHeight - 20),
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.password_outlined),
+                            label: Text(passwordString),
+                          ),
+                          validator: _validatePassword,
+                        ),
+                        const SizedBox(height: tFormHeight - 20),
+                        TextFormField(
+                          controller: _confirmPasswordController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.password_outlined),
+                            label: Text('Confirm Password'),
+                          ),
+                          validator: _validateConfirmPassword,
+                        ),
+                        const SizedBox(height: tFormHeight - 10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              shape: const RoundedRectangleBorder(),
+                              foregroundColor: whiteColor,
+                              backgroundColor: secondaryColor,
+                              side: const BorderSide(color: secondaryColor),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: tButtonHeight),
+                            ),
+                            onPressed: context.watch<AuthViewModel>().isLoading
+                                ? null
+                                : _register,
+                            child: context.watch<AuthViewModel>().isLoading
+                                ? const CircularProgressIndicator()
+                                : const Text('SIGN UP'),
+                          ),
+                        ),
+                      ],
                     ),
-                    validator: _validatePassword,
                   ),
-                  const SizedBox(height: tFormHeight - 20),
-                  TextFormField(
-                    controller: _confirmPasswordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.password),
-                      label: Text('Confirm Password'),
-                    ),
-                    validator: _validateConfirmPassword,
-                  ),
-                  const SizedBox(height: tFormHeight - 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(),
-                        foregroundColor: whiteColor,
-                        backgroundColor: secondaryColor,
-                        side: BorderSide(color: secondaryColor),
-                        padding: EdgeInsets.symmetric(vertical: tButtonHeight),
+                  // -- .end - 2 --
+
+                  // -- Section - 3 --
+                  Column(
+                    children: [
+                      const SizedBox(height: tFormHeight - 20),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()),
+                          );
+                        },
+                        child: Text.rich(
+                          TextSpan(
+                            text: alreadyHaveAnAccountString,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            children: const [
+                              TextSpan(
+                                text: " $loginString",
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      onPressed: context.watch<AuthViewModel>().isLoading
-                          ? null
-                          : _register,
-                      child: context.watch<AuthViewModel>().isLoading
-                          ? CircularProgressIndicator()
-                          : Text('REGISTER'),
-                    ),
+                    ],
                   ),
+                  // -- .end - 3 --
                 ],
               ),
             ),
-            const SizedBox(height: tFormHeight - 20),
-            // -- Section - 3 --
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text("OR"),
-                const SizedBox(height: tFormHeight - 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButtonCustom(
-                    icon: Image(
-                      image: AssetImage(tGoogleLogoImage),
-                      width: 20.0,
-                    ),
-                    onPressed: () {},
-                    label: tSignInWithGoogle,
-                  ),
-                ),
-                const SizedBox(height: tFormHeight - 20),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
-                    },
-                    child: Text.rich(TextSpan(
-                        text: tAlreadyHaveAnAccount,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        children: const [
-                          TextSpan(
-                            text: " " + tLogin,
-                            style: TextStyle(color: Colors.blue),
-                          )
-                        ])))
-              ],
-            )
-            // -- .end - 3--
-          ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
