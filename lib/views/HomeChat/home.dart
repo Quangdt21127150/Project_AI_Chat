@@ -10,13 +10,14 @@ import 'package:project_ai_chat/viewmodels/knowledge_base_view_model.dart';
 import 'package:project_ai_chat/viewmodels/prompt_list_view_model.dart';
 import '../../constants/text_strings.dart';
 import '../../core/Widget/dropdown_button.dart';
+import '../../models/prompt.dart';
 import '../../utils/helpers/ads/ads_helper.dart';
 import '../../viewmodels/aichat_list_view_model.dart';
 import '../../viewmodels/homechat_view_model.dart';
-import '../BottomSheet/Widgets/PromptDetailsBottomSheet/prompt_details_bottom_sheet.dart';
-import '../BottomSheet/custom_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import '../EmailChat/email.dart';
+import '../Prompt/prompt_screen.dart';
+import '../Prompt/widgets/prompt_details.dart';
 import 'Widgets/bottom_navigation.dart';
 import 'Widgets/menu.dart';
 import '../../models/ai_logo.dart';
@@ -91,7 +92,7 @@ class _HomeChatState extends State<HomeChat> {
     // Hiển thị token
     Provider.of<MessageModel>(context, listen: false).updateRemainingUsage();
 
-    // Load all Knowledgebase
+    // Lấy danh sách Knowledgebase
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<KnowledgeBaseProvider>(context, listen: false)
           .fetchAllKnowledgeBases(isLoadMore: false);
@@ -109,17 +110,16 @@ class _HomeChatState extends State<HomeChat> {
           });
           _interstitialAd?.show();
           _interstitialAd?.fullScreenContentCallback =
-            FullScreenContentCallback(
-              onAdDismissedFullScreenContent: (InterstitialAd ad) {
-                ad.dispose();
-                print("Interstitial Ad dismissed.");
-              },
-              onAdFailedToShowFullScreenContent:
-                  (InterstitialAd ad, AdError error) {
-                ad.dispose();
-                print("Failed to show Interstitial Ad: ${error.message}");
-              },
-            );
+              FullScreenContentCallback(
+                onAdDismissedFullScreenContent: (InterstitialAd ad) {
+                  ad.dispose();
+                  print("Interstitial Ad dismissed.");
+                },
+                onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+                  ad.dispose();
+                  print("Failed to show Interstitial Ad: ${error.message}");
+                },
+              );
         },
         onAdFailedToLoad: (error) {
           print('Interstitial ad failed to load: $error');
@@ -156,7 +156,7 @@ class _HomeChatState extends State<HomeChat> {
       Provider.of<PromptListViewModel>(context, listen: false)
           .fetchAllPrompts()
           .then((_) {
-        Provider.of<PromptListViewModel>(context, listen: false).allprompts;
+        Provider.of<PromptListViewModel>(context, listen: false).allPrompts;
       });
     } catch (e) {
       return;
@@ -178,7 +178,18 @@ class _HomeChatState extends State<HomeChat> {
       _selectedBottomItemIndex = index;
     });
     if (index == 1) {
-      CustomBottomSheet.show(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const PromptScreen()),
+      ).then((result) {
+        if (result != null && result is String && result.contains('Respond in')) {
+          setState(() {
+            _controller.text = result.replaceFirst('Respond in: ', '');
+            _sendMessage();
+          });
+        }
+        _loadAllPrompt();
+      });
     } else if (index == 2) {
       Navigator.push(
         context,
@@ -216,6 +227,9 @@ class _HomeChatState extends State<HomeChat> {
       );
 
       _controller.clear();
+      setState(() {
+        _imagePaths = null; // Clear image paths after sending
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -246,8 +260,33 @@ class _HomeChatState extends State<HomeChat> {
     if (input.isNotEmpty) {
       _showSlash = input.startsWith('/');
     } else {
-      _showSlash = false; // Đặt lại _showSlash khi không có input
+      _showSlash = false;
     }
+  }
+
+  void _openPromptDetailsDialog(BuildContext context, Prompt prompt) {
+    PromptDetails.show(
+      context,
+      promptId: prompt.id,
+      itemTitle: prompt.title,
+      content: prompt.content,
+      category: prompt.category,
+      description: prompt.description,
+      language: prompt.language,
+      isPublic: prompt.isPublic,
+      isFavorite: prompt.isFavorite,
+    ).then((result) {
+      if (result != null) {
+        if (result['action'] == 'send') {
+          setState(() {
+            _controller.text = result['content'];
+            _sendMessage();
+          });
+        } else if (result['action'] == 'update') {
+          _loadAllPrompt();
+        }
+      }
+    });
   }
 
   @override
@@ -263,85 +302,86 @@ class _HomeChatState extends State<HomeChat> {
             return Column(
               children: [
                 SafeArea(
-                    child: Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                // Open menu
-                                _scaffoldKey.currentState?.openDrawer();
-                              },
-                              icon: const Icon(Icons.menu)),
-                          const Spacer(),
-                          TextButton(
-                            onPressed: () async {
-                              final Uri url = Uri.parse(linkUpgrade);
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Cannot open link!')),
-                                );
-                              }
-                            },
-                            child: const Row(
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            // Open menu
+                            _scaffoldKey.currentState?.openDrawer();
+                          },
+                          icon: const Icon(Icons.menu),
+                        ),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () async {
+                            final Uri url = Uri.parse(linkUpgrade);
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Cannot open link!')),
+                              );
+                            }
+                          },
+                          child: const Row(
+                            children: [
+                              Text(
+                                'Upgrade',
+                                style: TextStyle(color: Colors.blue, fontSize: 12),
+                              ),
+                              Icon(
+                                Icons.rocket,
+                                color: Colors.blueAccent,
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (!botModel.isChatWithMyBot)
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 238, 240, 243),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Row(
                               children: [
-                                Text(
-                                  'Upgrade',
-                                  style:
-                                  TextStyle(color: Colors.blue, fontSize: 12),
+                                const Icon(
+                                  Icons.flash_on,
+                                  color: Colors.orange,
                                 ),
-                                Icon(
-                                  Icons.rocket,
-                                  color: Colors.blueAccent,
+                                messageModel.maxTokens == 99999 &&
+                                    messageModel.maxTokens != null
+                                    ? const Text(
+                                  "Unlimited",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.orange,
+                                  ),
                                 )
+                                    : Text(
+                                  '${messageModel.remainingUsage}',
+                                  style: const TextStyle(
+                                    color: Color.fromRGBO(119, 117, 117, 1.0),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                          if (!botModel.isChatWithMyBot)
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 238, 240, 243),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.flash_on,
-                                    color: Colors.orange,
-                                  ),
-                                  messageModel.maxTokens == 99999 &&
-                                      messageModel.maxTokens != null
-                                      ? const Text(
-                                    "Unlimited",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.orange,
-                                    ),
-                                  )
-                                      : Text(
-                                    '${messageModel.remainingUsage}',
-                                    style: const TextStyle(
-                                        color: Color.fromRGBO(
-                                            119, 117, 117, 1.0)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          IconButton(
-                              icon: const Icon(Icons.add_circle_outline),
-                              onPressed: () {
-                                Provider.of<MessageModel>(context, listen: false)
-                                    .clearMessage();
-                                botModel.isChatWithMyBot = false;
-                              }),
-                        ],
-                      ),
-                    )),
+                        IconButton(
+                          icon: const Icon(Icons.add_circle_outline),
+                          onPressed: () {
+                            Provider.of<MessageModel>(context, listen: false)
+                                .clearMessage();
+                            botModel.isChatWithMyBot = false;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
@@ -354,137 +394,110 @@ class _HomeChatState extends State<HomeChat> {
                       children: [
                         Expanded(
                           child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: 10, bottom: 10, right: 10),
-                              child: !botModel.isChatWithMyBot
-                                  ? Column(
-                                children: [
-                                  Expanded(
-                                    child: ListView.builder(
-                                      controller: _scrollController,
-                                      itemCount:
-                                      messageModel.messages.length,
-                                      itemBuilder: (context, index) {
-                                        final message =
-                                        messageModel.messages[index];
-                                        return BuildMessage(
-                                            message: message);
-                                      },
+                            padding: EdgeInsets.only(left: 10, bottom: 10, right: 10),
+                            child: !botModel.isChatWithMyBot
+                                ? Column(
+                              children: [
+                                Expanded(
+                                  child: ListView.builder(
+                                    controller: _scrollController,
+                                    itemCount: messageModel.messages.length,
+                                    itemBuilder: (context, index) {
+                                      final message =
+                                      messageModel.messages[index];
+                                      return BuildMessage(message: message);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                if (!botModel.isChatWithMyBot)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 5.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: 140,
+                                          child: AIDropdown(
+                                            listAIItems: _listAIItem,
+                                            onChanged: (String? newValue) {
+                                              if (newValue != null) {
+                                                _updateSelectedAIItem(newValue);
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
-                                  if (!botModel.isChatWithMyBot)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0, vertical: 5.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: 140,
-                                            child: AIDropdown(
-                                              listAIItems: _listAIItem,
-                                              onChanged:
-                                                  (String? newValue) {
-                                                if (newValue != null) {
-                                                  _updateSelectedAIItem(
-                                                      newValue);
-                                                }
+                                if (_showSlash)
+                                  Consumer<PromptListViewModel>(
+                                    builder: (context, promptList, child) {
+                                      if (promptList.isLoading) {
+                                        return const CircularProgressIndicator();
+                                      } else if (promptList.hasError) {
+                                        return Text(
+                                            'Có lỗi xảy ra: ${promptList.error}');
+                                      } else {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(5),
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width /
+                                                3 *
+                                                2,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: const Color.fromARGB(
+                                                    255, 158, 198, 232),
+                                                width: 1.0,
+                                              ),
+                                              borderRadius:
+                                              BorderRadius.circular(20.0),
+                                            ),
+                                            constraints: BoxConstraints(
+                                              maxHeight: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                                  3,
+                                            ),
+                                            child: ListView.builder(
+                                              itemCount: promptList.allPrompts.items.length,
+                                              itemBuilder: (context, index) {
+                                                return ListTile(
+                                                  title: Text(promptList.allPrompts.items[index].title),
+                                                  onTap: () {
+                                                    _controller.text = "";
+                                                    _showSlash = false;
+                                                    _openPromptDetailsDialog(
+                                                        context,
+                                                        promptList.allPrompts.items[index]);
+                                                  },
+                                                );
                                               },
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  if (_showSlash)
-                                    Consumer<PromptListViewModel>(
-                                      builder:
-                                          (context, promptList, child) {
-                                        if (promptList.isLoading) {
-                                          return const CircularProgressIndicator();
-                                        } else if (promptList.hasError) {
-                                          return Text(
-                                              'Có lỗi xảy ra: ${promptList.error}');
-                                        } else {
-                                          return Padding(
-                                            padding:
-                                            const EdgeInsets.all(5),
-                                            child: Container(
-                                              width:
-                                              MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                                  3 *
-                                                  2,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: const Color
-                                                      .fromARGB(
-                                                      255,
-                                                      158,
-                                                      198,
-                                                      232),
-                                                  width: 1.0,
-                                                ),
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    20.0),
-                                              ),
-                                              constraints: BoxConstraints(
-                                                  maxHeight:
-                                                  MediaQuery.of(
-                                                      context)
-                                                      .size
-                                                      .height /
-                                                      3),
-                                              child: ListView.builder(
-                                                itemCount: promptList
-                                                    .allprompts
-                                                    .items
-                                                    .length,
-                                                itemBuilder:
-                                                    (context, index) {
-                                                  return ListTile(
-                                                    title: Text(promptList
-                                                        .allprompts
-                                                        .items[index]
-                                                        .title),
-                                                    onTap: () {
-                                                      _controller.text =
-                                                      "";
-                                                      _showSlash = false;
-                                                      PromptDetailsBottomSheet.show(
-                                                          context,
-                                                          promptList
-                                                              .allprompts
-                                                              .items[index]);
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  InputWidget(
-                                    focusNode: _focusNode,
-                                    controller: _controller,
-                                    onTextChanged: _onTextChanged,
-                                    sendMessage: _sendMessage,
-                                    isOpenDeviceWidget:
-                                    _isOpenDeviceWidget,
-                                    toggleDeviceVisibility:
-                                    _toggleDeviceVisibility,
-                                    hasText: _hasText,
+                                        );
+                                      }
+                                    },
                                   ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                ],
-                              )
-                                  : ChatWidget()),
+                                InputWidget(
+                                  focusNode: _focusNode,
+                                  controller: _controller,
+                                  onTextChanged: _onTextChanged,
+                                  sendMessage: _sendMessage,
+                                  isOpenDeviceWidget: _isOpenDeviceWidget,
+                                  toggleDeviceVisibility: _toggleDeviceVisibility,
+                                  hasText: _hasText,
+                                ),
+                                const SizedBox(height: 5),
+                              ],
+                            )
+                                : ChatWidget(),
+                          ),
                         ),
                       ],
                     ),
