@@ -11,7 +11,7 @@ class AIChatList extends ChangeNotifier {
     ),
     AIItem(
       name: 'GPT-4o mini',
-      logoPath: 'assets/logo/monica.png',
+      logoPath: 'assets/logo/gpt-4o-mini.png',
       id: 'gpt-4o-mini',
     ),
     AIItem(
@@ -21,12 +21,12 @@ class AIChatList extends ChangeNotifier {
     ),
     AIItem(
       name: 'Gemini 1.5 Flash',
-      logoPath: 'assets/logo/gemini-1.5-flash-latest.jpg',
+      logoPath: 'assets/logo/gemini-1.5-flash.png',
       id: 'gemini-1.5-flash-latest',
     ),
     AIItem(
       name: 'Claude 3 Sonnet',
-      logoPath: 'assets/logo/claude-3-sonet.jpg',
+      logoPath: 'assets/logo/claude-3-sonnet.png',
       id: 'claude-3-sonnet-20240229',
     ),
   ];

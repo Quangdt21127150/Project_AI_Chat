@@ -119,14 +119,14 @@ class _EmailComposerState extends State<EmailComposer> {
                 children: [
                   const Icon(
                     Icons.flash_on,
-                    color: Colors.blueAccent,
+                    color: Colors.orange,
                   ),
                   _token == 99999
                       ? const Text(
                           "Unlimited",
                           style: TextStyle(
                             fontSize: 10,
-                            color: Colors.blueAccent,
+                            color: Colors.orange,
                           ),
                         )
                       : Text(

@@ -365,8 +365,7 @@ class MessageModel extends ChangeNotifier {
         _messages.clear();
       }
       // Xóa tin nhắn cũ trước khi thêm lịch sử mới
-      _currentConversationId =
-          conversationId; // Cập nhật ID cuộc hội thoại hiện tại
+      _currentConversationId = conversationId; // Cập nhật ID cuộc hội thoại hiện tại
 
       // Xử lý messages nhận được
       for (var message in response.items) {

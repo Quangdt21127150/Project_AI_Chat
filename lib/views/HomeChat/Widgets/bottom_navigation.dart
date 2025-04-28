@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
@@ -17,24 +16,24 @@ class CustomBottomNavigationBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.chat),
+          icon: Icon(Icons.chat_bubble_outline),
           label: 'Chat',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.list),
+          icon: Icon(Icons.list),
           label: 'Prompt',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.robot),
+          icon: Icon(Icons.lightbulb_outline),
           label: 'Bot AI',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.email),
+          icon: Icon(Icons.email_outlined),
           label: 'Email',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Information',
+          icon: Icon(Icons.person_outline),
+          label: 'Profile',
         ),
       ],
       currentIndex: currentIndex,

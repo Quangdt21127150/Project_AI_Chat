@@ -52,7 +52,7 @@ class AuthInterceptorKnowledgeBase extends Interceptor {
         }
       } else {
         // Nếu làm mới token không thành công, đăng xuất
-        await _logout();
+        // await _logout();
         // handler.next(err);
         // handler.reject(DioException(
         //   requestOptions: err.requestOptions,

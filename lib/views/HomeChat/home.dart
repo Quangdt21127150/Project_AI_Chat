@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:project_ai_chat/views/Account/pages/account_screent.dart';
+import 'package:project_ai_chat/views/Account/pages/account_screen.dart';
 import 'package:project_ai_chat/views/Bot/page/bot_screen.dart';
 import 'package:project_ai_chat/core/Widget/chat_widget.dart';
 import 'package:project_ai_chat/utils/exceptions/chat_exception.dart';
@@ -33,10 +33,10 @@ class HomeChat extends StatefulWidget {
 }
 
 class _HomeChatState extends State<HomeChat> {
-  //Admob
+  // AdMob
   InterstitialAd? _interstitialAd;
 
-  //Controller
+  // Controller
   final TextEditingController _controller = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
@@ -51,16 +51,13 @@ class _HomeChatState extends State<HomeChat> {
   late List<AIItem> _listAIItem;
   late String _selectedAIItem;
 
-  //Link upgrade
-
-
   @override
   void initState() {
     super.initState();
-    //Load interstitial ad when open app
+    // Load interstitial ad when open app
     _loadInterstitialAd();
 
-    //Bắt sự kiện thay đổi text trong ô nhập dữ liệu
+    // Bắt sự kiện thay đổi text trong ô nhập dữ liệu
     _controller.addListener(() {
       setState(() {
         _hasText = _controller.text.isNotEmpty;
@@ -70,7 +67,7 @@ class _HomeChatState extends State<HomeChat> {
       });
     });
 
-    //Bắt sự lắng nghe khi focus vào ô nhập dữ liệu
+    // Bắt sự lắng nghe khi focus vào ô nhập dữ liệu
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         setState(() {
@@ -79,7 +76,7 @@ class _HomeChatState extends State<HomeChat> {
       }
     });
 
-    // lấy thông tin user
+    // Lấy thông tin user
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadUserInfo();
       _loadConversation();
@@ -91,7 +88,7 @@ class _HomeChatState extends State<HomeChat> {
     _listAIItem = aiChatList.aiItems;
     _selectedAIItem = aiChatList.selectedAIItem.name;
 
-    //Hiển thị token
+    // Hiển thị token
     Provider.of<MessageModel>(context, listen: false).updateRemainingUsage();
 
     // Load all Knowledgebase
@@ -112,17 +109,17 @@ class _HomeChatState extends State<HomeChat> {
           });
           _interstitialAd?.show();
           _interstitialAd?.fullScreenContentCallback =
-              FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (InterstitialAd ad) {
-              ad.dispose();
-              print("Interstitial Ad dismissed.");
-            },
-            onAdFailedToShowFullScreenContent:
-                (InterstitialAd ad, AdError error) {
-              ad.dispose();
-              print("Failed to show Interstitial Ad: ${error.message}");
-            },
-          );
+            FullScreenContentCallback(
+              onAdDismissedFullScreenContent: (InterstitialAd ad) {
+                ad.dispose();
+                print("Interstitial Ad dismissed.");
+              },
+              onAdFailedToShowFullScreenContent:
+                  (InterstitialAd ad, AdError error) {
+                ad.dispose();
+                print("Failed to show Interstitial Ad: ${error.message}");
+              },
+            );
         },
         onAdFailedToLoad: (error) {
           print('Interstitial ad failed to load: $error');
@@ -140,8 +137,7 @@ class _HomeChatState extends State<HomeChat> {
   }
 
   Future<void> _loadConversation() async {
-    final aiItem =
-        _listAIItem.firstWhere((aiItem) => aiItem.name == _selectedAIItem);
+    final aiItem = _listAIItem.firstWhere((aiItem) => aiItem.name == _selectedAIItem);
     try {
       Provider.of<MessageModel>(context, listen: false)
           .fetchAllConversations(aiItem.id, 'dify')
@@ -196,7 +192,7 @@ class _HomeChatState extends State<HomeChat> {
     } else if (index == 4) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const AccountScreent()),
+        MaterialPageRoute(builder: (context) => const AccountScreen()),
       );
     }
   }
@@ -211,8 +207,7 @@ class _HomeChatState extends State<HomeChat> {
     if (_imagePaths == null && _controller.text.isEmpty) return;
 
     try {
-      final aiItem =
-          _listAIItem.firstWhere((aiItem) => aiItem.name == _selectedAIItem);
+      final aiItem = _listAIItem.firstWhere((aiItem) => aiItem.name == _selectedAIItem);
 
       await Provider.of<MessageModel>(context, listen: false).sendMessage(
         _controller.text.isEmpty ? '' : _controller.text,
@@ -236,8 +231,7 @@ class _HomeChatState extends State<HomeChat> {
   void _updateSelectedAIItem(String newValue) {
     setState(() {
       _selectedAIItem = newValue;
-      AIItem aiItem =
-          _listAIItem.firstWhere((aiItem) => aiItem.name == newValue);
+      AIItem aiItem = _listAIItem.firstWhere((aiItem) => aiItem.name == newValue);
 
       // Cập nhật selectedAIItem trong AIChatList
       Provider.of<AIChatList>(context, listen: false).setSelectedAIItem(aiItem);
@@ -270,115 +264,84 @@ class _HomeChatState extends State<HomeChat> {
               children: [
                 SafeArea(
                     child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            //Open menu
-                            _scaffoldKey.currentState?.openDrawer();
-                          },
-                          icon: const Icon(Icons.menu)),
-                      !botModel.isChatWithMyBot
-                          ? AIDropdown(
-                              listAIItems: _listAIItem,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  _updateSelectedAIItem(newValue);
-                                }
+                      padding: EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                // Open menu
+                                _scaffoldKey.currentState?.openDrawer();
                               },
-                            )
-                          : Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      const Color.fromARGB(255, 238, 240, 243),
-                                ),
-                                height: 30,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Center(
-                                  child: Text(
-                                    botModel.currentChatBot.assistantName,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ),
-                            ),
-                      //const Spacer(),
-                      TextButton(
-                        onPressed: () async {
-                          final Uri url = Uri.parse(linkUpgrade);
-                          if (await canLaunchUrl(url)) {
-                            await launchUrl(url);
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Cannot open link!')),
-                            );
-                          }
-                        },
-                        child: const Row(
-                          children: [
-                            Text(
-                              'Upgrade',
-                              style:
+                              icon: const Icon(Icons.menu)),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () async {
+                              final Uri url = Uri.parse(linkUpgrade);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Cannot open link!')),
+                                );
+                              }
+                            },
+                            child: const Row(
+                              children: [
+                                Text(
+                                  'Upgrade',
+                                  style:
                                   TextStyle(color: Colors.blue, fontSize: 12),
+                                ),
+                                Icon(
+                                  Icons.rocket,
+                                  color: Colors.blueAccent,
+                                )
+                              ],
                             ),
-                            Icon(
-                              Icons.rocket,
-                              color: Colors.blueAccent,
-                            )
-                          ],
-                        ),
-                      ),
-                      if (!botModel.isChatWithMyBot)
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 238, 240, 243),
-                            borderRadius: BorderRadius.circular(12.0),
                           ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.flash_on,
-                                color: Colors.blueAccent,
+                          if (!botModel.isChatWithMyBot)
+                            Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 238, 240, 243),
+                                borderRadius: BorderRadius.circular(12.0),
                               ),
-                              messageModel.maxTokens == 99999 &&
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.flash_on,
+                                    color: Colors.orange,
+                                  ),
+                                  messageModel.maxTokens == 99999 &&
                                       messageModel.maxTokens != null
-                                  ? const Text(
-                                      "Unlimited",
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.blueAccent,
-                                      ),
-                                    )
-                                  : Text(
-                                      '${messageModel.remainingUsage}',
-                                      style: const TextStyle(
-                                          color: Color.fromRGBO(
-                                              119, 117, 117, 1.0)),
+                                      ? const Text(
+                                    "Unlimited",
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.orange,
                                     ),
-                            ],
-                          ),
-                        ),
-                      IconButton(
-                          icon: const Icon(Icons.add_circle_outline),
-                          onPressed: () {
-                            Provider.of<MessageModel>(context, listen: false)
-                                .clearMessage();
-                            botModel.isChatWithMyBot = false;
-                          }),
-                    ],
-                  ),
-                )),
+                                  )
+                                      : Text(
+                                    '${messageModel.remainingUsage}',
+                                    style: const TextStyle(
+                                        color: Color.fromRGBO(
+                                            119, 117, 117, 1.0)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          IconButton(
+                              icon: const Icon(Icons.add_circle_outline),
+                              onPressed: () {
+                                Provider.of<MessageModel>(context, listen: false)
+                                    .clearMessage();
+                                botModel.isChatWithMyBot = false;
+                              }),
+                        ],
+                      ),
+                    )),
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
@@ -395,109 +358,132 @@ class _HomeChatState extends State<HomeChat> {
                                   left: 10, bottom: 10, right: 10),
                               child: !botModel.isChatWithMyBot
                                   ? Column(
-                                      children: [
-                                        Expanded(
-                                          child: ListView.builder(
-                                            controller: _scrollController,
-                                            itemCount:
-                                                messageModel.messages.length,
-                                            itemBuilder: (context, index) {
-                                              final message =
-                                                  messageModel.messages[index];
-                                              return BuildMessage(
-                                                  message: message);
-                                            },
+                                children: [
+                                  Expanded(
+                                    child: ListView.builder(
+                                      controller: _scrollController,
+                                      itemCount:
+                                      messageModel.messages.length,
+                                      itemBuilder: (context, index) {
+                                        final message =
+                                        messageModel.messages[index];
+                                        return BuildMessage(
+                                            message: message);
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  if (!botModel.isChatWithMyBot)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0, vertical: 5.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: 140,
+                                            child: AIDropdown(
+                                              listAIItems: _listAIItem,
+                                              onChanged:
+                                                  (String? newValue) {
+                                                if (newValue != null) {
+                                                  _updateSelectedAIItem(
+                                                      newValue);
+                                                }
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        if (_showSlash)
-                                          Consumer<PromptListViewModel>(
-                                            builder:
-                                                (context, promptList, child) {
-                                              if (promptList.isLoading) {
-                                                return const CircularProgressIndicator(); // Hoặc một widget khác để hiển thị khi đang tải
-                                              } else if (promptList.hasError) {
-                                                return Text(
-                                                    'Có lỗi xảy ra: ${promptList.error}'); // Hiển thị lỗi
-                                              } else {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5),
-                                                  child: Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            3 *
-                                                            2,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        color: const Color
-                                                            .fromARGB(
-                                                            255,
-                                                            158,
-                                                            198,
-                                                            232), // Color of the border
-                                                        width:
-                                                            1.0, // Width of the border
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20.0), // Border radius
-                                                    ),
-                                                    constraints: BoxConstraints(
-                                                        maxHeight:
-                                                            MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height /
-                                                                3),
-                                                    child: ListView.builder(
-                                                      itemCount: promptList
-                                                          .allprompts
-                                                          .items
-                                                          .length,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return ListTile(
-                                                          title: Text(promptList
+                                        ],
+                                      ),
+                                    ),
+                                  if (_showSlash)
+                                    Consumer<PromptListViewModel>(
+                                      builder:
+                                          (context, promptList, child) {
+                                        if (promptList.isLoading) {
+                                          return const CircularProgressIndicator();
+                                        } else if (promptList.hasError) {
+                                          return Text(
+                                              'Có lỗi xảy ra: ${promptList.error}');
+                                        } else {
+                                          return Padding(
+                                            padding:
+                                            const EdgeInsets.all(5),
+                                            child: Container(
+                                              width:
+                                              MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                                  3 *
+                                                  2,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: const Color
+                                                      .fromARGB(
+                                                      255,
+                                                      158,
+                                                      198,
+                                                      232),
+                                                  width: 1.0,
+                                                ),
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    20.0),
+                                              ),
+                                              constraints: BoxConstraints(
+                                                  maxHeight:
+                                                  MediaQuery.of(
+                                                      context)
+                                                      .size
+                                                      .height /
+                                                      3),
+                                              child: ListView.builder(
+                                                itemCount: promptList
+                                                    .allprompts
+                                                    .items
+                                                    .length,
+                                                itemBuilder:
+                                                    (context, index) {
+                                                  return ListTile(
+                                                    title: Text(promptList
+                                                        .allprompts
+                                                        .items[index]
+                                                        .title),
+                                                    onTap: () {
+                                                      _controller.text =
+                                                      "";
+                                                      _showSlash = false;
+                                                      PromptDetailsBottomSheet.show(
+                                                          context,
+                                                          promptList
                                                               .allprompts
-                                                              .items[index]
-                                                              .title),
-                                                          onTap: () {
-                                                            _controller.text =
-                                                                ""; // Chọn prompt
-                                                            _showSlash = false;
-                                                            PromptDetailsBottomSheet.show(
-                                                                context,
-                                                                promptList
-                                                                    .allprompts
-                                                                    .items[index]);
-                                                          },
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        InputWidget(
-                                          focusNode: _focusNode,
-                                          controller: _controller,
-                                          onTextChanged: _onTextChanged,
-                                          sendMessage: _sendMessage,
-                                          isOpenDeviceWidget:
-                                              _isOpenDeviceWidget,
-                                          toggleDeviceVisibility:
-                                              _toggleDeviceVisibility,
-                                          hasText: _hasText,
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                      ],
-                                    )
+                                                              .items[index]);
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  InputWidget(
+                                    focusNode: _focusNode,
+                                    controller: _controller,
+                                    onTextChanged: _onTextChanged,
+                                    sendMessage: _sendMessage,
+                                    isOpenDeviceWidget:
+                                    _isOpenDeviceWidget,
+                                    toggleDeviceVisibility:
+                                    _toggleDeviceVisibility,
+                                    hasText: _hasText,
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                ],
+                              )
                                   : ChatWidget()),
                         ),
                       ],

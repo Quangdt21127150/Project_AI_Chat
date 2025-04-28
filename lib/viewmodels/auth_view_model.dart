@@ -101,26 +101,26 @@ class AuthViewModel extends ChangeNotifier {
         }
 
         // Lấy accestoken knowledge base server
-        final responseKB = await _authService
-            .loginFromExternalClient(response.data['token']?['accessToken']);
-
-        if (responseKB.success && responseKB.data != null) {
-          // Lưu access token knowledgebase server
-          if (responseKB.data['token']?['accessToken'] != null) {
-            await prefs.setString(
-                'kbAccessToken', responseKB.data['token']['accessToken']);
-          }
-          // Lưu refresh token knowledgebase server
-          if (responseKB.data['token']?['refreshToken'] != null) {
-            await prefs.setString(
-                'kbRefreshToken', responseKB.data['token']['refreshToken']);
-          }
-        } else {
-          error = response.message ?? 'Đăng nhập thất bại';
-          isLoading = false;
-          notifyListeners();
-          return false;
-        }
+        // final responseKB = await _authService
+        //     .loginFromExternalClient(response.data['token']?['accessToken']);
+        //
+        // if (responseKB.success && responseKB.data != null) {
+        //   // Lưu access token knowledgebase server
+        //   if (responseKB.data['token']?['accessToken'] != null) {
+        //     await prefs.setString(
+        //         'kbAccessToken', responseKB.data['token']['accessToken']);
+        //   }
+        //   // Lưu refresh token knowledgebase server
+        //   if (responseKB.data['token']?['refreshToken'] != null) {
+        //     await prefs.setString(
+        //         'kbRefreshToken', responseKB.data['token']['refreshToken']);
+        //   }
+        // } else {
+        //   error = response.message ?? 'Đăng nhập thất bại';
+        //   isLoading = false;
+        //   notifyListeners();
+        //   return false;
+        // }
 
         isLoading = false;
         notifyListeners();

@@ -173,7 +173,7 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "My Knowledges",
+          "Knowledge Bases",
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),

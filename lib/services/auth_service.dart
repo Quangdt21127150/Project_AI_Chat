@@ -252,56 +252,56 @@ class AuthService {
     }
   }
 
-  Future<ApiResponse> loginFromExternalClient(String accessToken) async {
-    try {
-      final response = await dioKB.post(
-        '/auth/external-sign-in',
-        data: {
-          'token': accessToken,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        return ApiResponse(
-          success: true,
-          data: response.data,
-          message: 'Đăng nhập knowledge base server thành công',
-          statusCode: response.statusCode ?? 200,
-        );
-      } else {
-        return ApiResponse(
-          success: false,
-          message: 'Đăng nhập knowledge base server thất bại',
-          statusCode: response.statusCode ?? 400,
-        );
-      }
-    } on DioException catch (e) {
-      String errorMessage = 'Đăng nhập knowledge base server thất bại';
-      if (e.response != null) {
-        final errorData = e.response!.data;
-
-        // Check for custom error messages in the response data
-        if (errorData['details'] != null && errorData['details'].isNotEmpty) {
-          // Collect all issues in `details` into a single message
-          log('errorData: ${errorData['details']}');
-          List<String> issues = (errorData['details'] as List<dynamic>)
-              .map<String>((detail) => detail['issue'] ?? 'Unknown issue')
-              .toList();
-          errorMessage = issues.join(', ');
-        }
-
-        return ApiResponse(
-          success: false,
-          message: errorMessage,
-          statusCode: e.response!.statusCode ?? 400,
-        );
-      }
-
-      return ApiResponse(
-        success: false,
-        message: errorMessage,
-        statusCode: e.response?.statusCode ?? 500,
-      );
-    }
-  }
+  // Future<ApiResponse> loginFromExternalClient(String accessToken) async {
+  //   try {
+  //     final response = await dioKB.post(
+  //       '/auth/external-sign-in',
+  //       data: {
+  //         'token': accessToken,
+  //       },
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       return ApiResponse(
+  //         success: true,
+  //         data: response.data,
+  //         message: 'Đăng nhập knowledge base server thành công',
+  //         statusCode: response.statusCode ?? 200,
+  //       );
+  //     } else {
+  //       return ApiResponse(
+  //         success: false,
+  //         message: 'Đăng nhập knowledge base server thất bại',
+  //         statusCode: response.statusCode ?? 400,
+  //       );
+  //     }
+  //   } on DioException catch (e) {
+  //     String errorMessage = 'Đăng nhập knowledge base server thất bại';
+  //     if (e.response != null) {
+  //       final errorData = e.response!.data;
+  //
+  //       // Check for custom error messages in the response data
+  //       if (errorData['details'] != null && errorData['details'].isNotEmpty) {
+  //         // Collect all issues in `details` into a single message
+  //         log('errorData: ${errorData['details']}');
+  //         List<String> issues = (errorData['details'] as List<dynamic>)
+  //             .map<String>((detail) => detail['issue'] ?? 'Unknown issue')
+  //             .toList();
+  //         errorMessage = issues.join(', ');
+  //       }
+  //
+  //       return ApiResponse(
+  //         success: false,
+  //         message: errorMessage,
+  //         statusCode: e.response!.statusCode ?? 400,
+  //       );
+  //     }
+  //
+  //     return ApiResponse(
+  //       success: false,
+  //       message: errorMessage,
+  //       statusCode: e.response?.statusCode ?? 500,
+  //     );
+  //   }
+  // }
 }
