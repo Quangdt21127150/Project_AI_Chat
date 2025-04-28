@@ -24,6 +24,9 @@ class _MenuState extends State<Menu> {
   late final AIChatList aiChatList;
   late AIItem currentAI;
   late ScrollController _scrollController;
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -39,6 +42,12 @@ class _MenuState extends State<Menu> {
               .fetchAllConversations(currentAI.id, 'dify', isLoadMore: true);
         }
       });
+
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text;
+      });
+    });
   }
 
   String _formatTimestamp(String timestamp) {
@@ -179,8 +188,28 @@ class _MenuState extends State<Menu> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: [
-              const Expanded(
-                child: Text(
+              Expanded(
+                child: _isSearching
+                    ? TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          _searchController.clear();
+                          _isSearching = false;
+                        });
+                      },
+                    ),
+                  ),
+                  autofocus: true,
+                )
+                    : const Text(
                   'All Conversations',
                   style: TextStyle(
                     fontSize: 18,
@@ -191,8 +220,16 @@ class _MenuState extends State<Menu> {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.search, color: Colors.black54),
-                onPressed: () {},
+                icon: Icon(_isSearching ? Icons.search_off : Icons.search,
+                    color: Colors.black54),
+                onPressed: () {
+                  setState(() {
+                    _isSearching = !_isSearching;
+                    if (!_isSearching) {
+                      _searchController.clear();
+                    }
+                  });
+                },
                 constraints: const BoxConstraints(),
                 padding: const EdgeInsets.all(8),
               ),
@@ -214,20 +251,31 @@ class _MenuState extends State<Menu> {
               );
             }
 
+            final filteredConversations = _searchQuery.isEmpty
+                ? messageModel.conversations
+                : messageModel.conversations
+                .where((conversation) => conversation.title
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()))
+                .toList();
+
             return ListView.builder(
               controller: _scrollController,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: messageModel.conversations.length +
-                  (messageModel.hasMoreConversation ? 1 : 0),
+              itemCount: filteredConversations.length +
+                  (messageModel.hasMoreConversation && _searchQuery.isEmpty
+                      ? 1
+                      : 0),
               itemBuilder: (context, index) {
-                if (index == messageModel.conversations.length) {
+                if (index == filteredConversations.length &&
+                    _searchQuery.isEmpty) {
                   return const Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Center(child: CircularProgressIndicator()),
                   );
                 }
-                final conversation = messageModel.conversations[index];
+                final conversation = filteredConversations[index];
                 String previewText = conversation.title.isNotEmpty
                     ? conversation.title.substring(
                     0,
@@ -359,6 +407,7 @@ class _MenuState extends State<Menu> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
   }

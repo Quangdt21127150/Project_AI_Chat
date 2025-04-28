@@ -14,8 +14,7 @@ class EmailComposer extends StatefulWidget {
 }
 
 class _EmailComposerState extends State<EmailComposer> {
-  final TextEditingController _emailReceivedController =
-      TextEditingController();
+  final TextEditingController _emailReceivedController = TextEditingController();
   final TextEditingController _aiActionController = TextEditingController();
   final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _senderController = TextEditingController();
@@ -71,8 +70,7 @@ class _EmailComposerState extends State<EmailComposer> {
   void _updateSelectedAIItem(String newValue) {
     setState(() {
       selectedAIItem = newValue;
-      AIItem aiItem =
-          _listAIItem.firstWhere((aiItem) => aiItem.name == newValue);
+      AIItem aiItem = _listAIItem.firstWhere((aiItem) => aiItem.name == newValue);
 
       // Cập nhật selectedAIItem trong AIChatList
       Provider.of<AIChatList>(context, listen: false).setSelectedAIItem(aiItem);
@@ -112,8 +110,7 @@ class _EmailComposerState extends State<EmailComposer> {
               color: const Color.fromARGB(255, 238, 240, 243),
               borderRadius: BorderRadius.circular(12.0),
             ),
-            child: Consumer<EmailChatViewModel>(
-                builder: (context, emailViewModel, _) {
+            child: Consumer<EmailChatViewModel>(builder: (context, emailViewModel, _) {
               int? tokenCount = emailViewModel.remainingUsage;
               return Row(
                 children: [
@@ -122,18 +119,18 @@ class _EmailComposerState extends State<EmailComposer> {
                     color: Colors.orange,
                   ),
                   _token == 99999
-                      ? const Text(
-                          "Unlimited",
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.orange,
-                          ),
-                        )
-                      : Text(
-                          '${tokenCount != null ? tokenCount : _token}',
-                          style: const TextStyle(
-                              color: Color.fromRGBO(119, 117, 117, 1.0)),
-                        ),
+                    ? const Text(
+                      "Unlimited",
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.orange,
+                    ),
+                  )
+                    : Text(
+                      '${tokenCount != null ? tokenCount : _token}',
+                      style: const TextStyle(
+                          color: Color.fromRGBO(119, 117, 117, 1.0)),
+                    ),
                 ],
               );
             }),
@@ -237,7 +234,6 @@ class _EmailComposerState extends State<EmailComposer> {
                                           sender: _senderController.text,
                                           receiver: _receiverController.text,
                                           language: _languageController.text);
-                                      // Đổi màu nút sau khi nhấn
                                       setState(() {
                                         _selectedIdea = idea;
                                       });
@@ -302,21 +298,12 @@ class _EmailComposerState extends State<EmailComposer> {
                       spacing: 10,
                       runSpacing: 10,
                       children: [
-                        buildButton(Icons.tag_faces, 'Thanks',
-                            Colors.redAccent, () => _createDraft('Thanks')),
-                        buildButton(Icons.tag_faces_rounded, 'Sorry',
-                            Colors.orange, () => _createDraft('Sorry')),
-                        buildButton(Icons.thumb_up, 'Yes', Colors.yellow,
-                            () => _createDraft('Yes')),
-                        buildButton(Icons.thumb_down, 'No', Colors.yellow,
-                            () => _createDraft('No')),
-                        buildButton(Icons.schedule, 'Follow Up', Colors.blue,
-                            () => _createDraft('Follow Up')),
-                        buildButton(
-                            Icons.question_answer,
-                            'Request for more information',
-                            Colors.pinkAccent,
-                            () => _createDraft('Request for more information')),
+                        buildButton('Thanks', () => _createDraft('Thanks')),
+                        buildButton('Sorry', () => _createDraft('Sorry')),
+                        buildButton('Yes', () => _createDraft('Yes')),
+                        buildButton('No', () => _createDraft('No')),
+                        buildButton('Follow Up', () => _createDraft('Follow Up')),
+                        buildButton('Request for more information', () => _createDraft('Request for more information')),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -326,16 +313,14 @@ class _EmailComposerState extends State<EmailComposer> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.grey[200],
-                              border:
-                                  Border.all(color: Colors.grey, width: 1.0),
+                              border: Border.all(color: Colors.grey, width: 1.0),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: 'Enter your message...',
                                 border: InputBorder.none,
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 10),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
                               ),
                             ),
                           ),
@@ -343,19 +328,17 @@ class _EmailComposerState extends State<EmailComposer> {
                         IconButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              await Provider.of<EmailChatViewModel>(context,
-                                      listen: false)
-                                  .getEmailSuggestions(
-                                      action: _aiActionController.text,
-                                      email: _emailReceivedController.text,
-                                      subject: _subjectController.text,
-                                      sender: _senderController.text,
-                                      receiver: _receiverController.text,
-                                      language: _languageController.text);
+                              await Provider.of<EmailChatViewModel>(context, listen: false).getEmailSuggestions(
+                                action: _aiActionController.text,
+                                email: _emailReceivedController.text,
+                                subject: _subjectController.text,
+                                sender: _senderController.text,
+                                receiver: _receiverController.text,
+                                language: _languageController.text);
                             }
                           },
                           icon: Icon(Icons.send),
-                          color: Colors.black87, // Icon color
+                          color: Colors.black87,
                         ),
                       ],
                     ),

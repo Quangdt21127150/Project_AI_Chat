@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget buildButton(
-    IconData icon, String label, Color color, VoidCallback onPressed) {
+Widget buildButton(String label, VoidCallback onPressed) {
   return ElevatedButton(
     onPressed: onPressed,
     style: ElevatedButton.styleFrom(
@@ -13,8 +12,6 @@ Widget buildButton(
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: color),
-        const SizedBox(width: 5),
         Text(
           label,
           style: TextStyle(
