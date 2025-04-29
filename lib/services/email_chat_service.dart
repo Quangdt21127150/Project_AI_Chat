@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:project_ai_chat/utils/dio/dio_client.dart';
+import 'package:project_ai_chat/utils/dio/dio_jarvis.dart';
 import 'package:project_ai_chat/utils/exceptions/chat_exception.dart';
 import 'package:project_ai_chat/models/response/email_chat_response.dart';
 

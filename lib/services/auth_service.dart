@@ -1,7 +1,8 @@
 import 'dart:developer';
 import 'package:project_ai_chat/models/response/subscription_response.dart';
 import 'package:project_ai_chat/models/response/token_usage_response.dart';
-import 'package:project_ai_chat/utils/dio/dio_client.dart';
+import 'package:project_ai_chat/utils/dio/dio_auth.dart';
+import 'package:project_ai_chat/utils/dio/dio_jarvis.dart';
 import 'package:project_ai_chat/utils/dio/dio_knowledge_base.dart';
 import 'package:project_ai_chat/utils/exceptions/chat_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,14 +11,20 @@ import '../models/response/api_response.dart';
 import 'package:dio/dio.dart';
 
 class AuthService {
+  final dioAuth = DioAuth().dio;
   final dio = DioClient().dio;
   final dioKB = DioKnowledgeBase().dio;
 
   Future<ApiResponse> register(User user) async {
     try {
-      final response = await dio.post(
-        '/auth/sign-up',
-        data: user.toJson(),
+      final response = await dioAuth.post(
+        '/auth/password/sign-up',
+        data: {
+          'email': user.email,
+          'password': user.password,
+          'verification_callback_url':
+          'https://auth.dev.jarvis.cx/handler/email-verification?after_auth_return_to=%2Fauth%2Fsignin%3Fclient_id%3Djarvis_chat%26redirect%3Dhttps%253A%252F%252Fchat.dev.jarvis.cx%252Fauth%252Foauth%252Fsuccess',
+        },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -66,8 +73,8 @@ class AuthService {
 
   Future<ApiResponse> login(String email, String password) async {
     try {
-      final response = await dio.post(
-        '/auth/sign-in',
+      final response = await dioAuth.post(
+        '/auth/password/sign-in',
         data: {
           'email': email,
           'password': password,
@@ -167,7 +174,19 @@ class AuthService {
 
   Future<ApiResponse> logout() async {
     try {
-      final response = await dio.get('/auth/sign-out');
+      final prefs = await SharedPreferences.getInstance();
+      final refreshToken = prefs.getString('refreshToken');
+
+      final response = await dioAuth.delete(
+        '/auth/sessions/current',
+        options: Options(
+          headers: {
+            'X-Stack-Refresh-Token': refreshToken,
+          },
+        ),
+        data: {},
+      );
+
       if (response.statusCode == 200) {
         return ApiResponse(
           success: true,
@@ -251,57 +270,4 @@ class AuthService {
       );
     }
   }
-
-  // Future<ApiResponse> loginFromExternalClient(String accessToken) async {
-  //   try {
-  //     final response = await dioKB.post(
-  //       '/auth/external-sign-in',
-  //       data: {
-  //         'token': accessToken,
-  //       },
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       return ApiResponse(
-  //         success: true,
-  //         data: response.data,
-  //         message: 'Đăng nhập knowledge base server thành công',
-  //         statusCode: response.statusCode ?? 200,
-  //       );
-  //     } else {
-  //       return ApiResponse(
-  //         success: false,
-  //         message: 'Đăng nhập knowledge base server thất bại',
-  //         statusCode: response.statusCode ?? 400,
-  //       );
-  //     }
-  //   } on DioException catch (e) {
-  //     String errorMessage = 'Đăng nhập knowledge base server thất bại';
-  //     if (e.response != null) {
-  //       final errorData = e.response!.data;
-  //
-  //       // Check for custom error messages in the response data
-  //       if (errorData['details'] != null && errorData['details'].isNotEmpty) {
-  //         // Collect all issues in `details` into a single message
-  //         log('errorData: ${errorData['details']}');
-  //         List<String> issues = (errorData['details'] as List<dynamic>)
-  //             .map<String>((detail) => detail['issue'] ?? 'Unknown issue')
-  //             .toList();
-  //         errorMessage = issues.join(', ');
-  //       }
-  //
-  //       return ApiResponse(
-  //         success: false,
-  //         message: errorMessage,
-  //         statusCode: e.response!.statusCode ?? 400,
-  //       );
-  //     }
-  //
-  //     return ApiResponse(
-  //       success: false,
-  //       message: errorMessage,
-  //       statusCode: e.response?.statusCode ?? 500,
-  //     );
-  //   }
-  // }
 }

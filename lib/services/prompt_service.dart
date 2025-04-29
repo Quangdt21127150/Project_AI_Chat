@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:project_ai_chat/models/prompt_model.dart';
-import 'package:project_ai_chat/utils/dio/dio_client.dart';
+import 'package:project_ai_chat/utils/dio/dio_jarvis.dart';
 import 'package:project_ai_chat/models/prompt_list.dart';
 
 class PromptService {

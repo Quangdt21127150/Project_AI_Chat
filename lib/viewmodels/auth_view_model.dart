@@ -90,30 +90,28 @@ class AuthViewModel extends ChangeNotifier {
       if (response.success && response.data != null) {
         final prefs = await SharedPreferences.getInstance();
         // Lưu access token
-        if (response.data['token']?['accessToken'] != null) {
-          await prefs.setString(
-              'accessToken', response.data['token']['accessToken']);
+        if (response.data['access_token'] != null) {
+          await prefs.setString('accessToken', response.data['access_token']);
         }
         // Lưu refresh token
-        if (response.data['token']?['refreshToken'] != null) {
-          await prefs.setString(
-              'refreshToken', response.data['token']['refreshToken']);
+        if (response.data['refresh_token'] != null) {
+          await prefs.setString('refreshToken', response.data['refresh_token']);
         }
 
         // Lấy accestoken knowledge base server
         // final responseKB = await _authService
-        //     .loginFromExternalClient(response.data['token']?['accessToken']);
+        //     .loginFromExternalClient(response.data['access_token']);
         //
         // if (responseKB.success && responseKB.data != null) {
         //   // Lưu access token knowledgebase server
-        //   if (responseKB.data['token']?['accessToken'] != null) {
+        //   if (responseKB.data['access_token'] != null) {
         //     await prefs.setString(
-        //         'kbAccessToken', responseKB.data['token']['accessToken']);
+        //         'kbAccessToken', responseKB.data['access_token']);
         //   }
         //   // Lưu refresh token knowledgebase server
-        //   if (responseKB.data['token']?['refreshToken'] != null) {
+        //   if (responseKB.data['refresh_token'] != null) {
         //     await prefs.setString(
-        //         'kbRefreshToken', responseKB.data['token']['refreshToken']);
+        //         'kbRefreshToken', responseKB.data['refresh_token']);
         //   }
         // } else {
         //   error = response.message ?? 'Đăng nhập thất bại';

@@ -12,7 +12,7 @@ class DioClient {
   DioClient._internal() {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'https://api.jarvis.cx/api/v1',
+        baseUrl: 'https://api.dev.jarvis.cx/api/v1',
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         headers: {
@@ -21,6 +21,8 @@ class DioClient {
         },
       ),
     );
+
+    dio.interceptors.add(AuthInterceptor(dio: dio));
 
     // Thêm interceptor để log request/response
     dio.interceptors.add(LogInterceptor(
@@ -31,7 +33,5 @@ class DioClient {
       responseBody: true,
       error: true,
     ));
-
-    dio.interceptors.add(AuthInterceptor(dio: dio));
   }
 }

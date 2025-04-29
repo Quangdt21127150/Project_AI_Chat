@@ -5,7 +5,7 @@ import 'package:project_ai_chat/models/response/chat_response.dart';
 import 'package:project_ai_chat/models/response/conversation_history_response.dart';
 import 'package:project_ai_chat/models/response/message_response.dart';
 import 'package:project_ai_chat/models/response/token_usage_response.dart';
-import 'package:project_ai_chat/utils/dio/dio_client.dart';
+import 'package:project_ai_chat/utils/dio/dio_jarvis.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 

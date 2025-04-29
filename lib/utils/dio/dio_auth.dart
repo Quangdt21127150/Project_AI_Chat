@@ -1,30 +1,31 @@
 import 'package:dio/dio.dart';
 import 'package:project_ai_chat/utils/dio/interceptor.dart/auth_interceptor.dart';
 
-class DioKnowledgeBase {
-  static final DioKnowledgeBase _instance = DioKnowledgeBase._internal();
+class DioAuth {
+  static final DioAuth _instance = DioAuth._internal();
   late Dio dio;
 
-  factory DioKnowledgeBase() {
+  factory DioAuth() {
     return _instance;
   }
 
-  DioKnowledgeBase._internal() {
+  DioAuth._internal() {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'https://knowledge-api.dev.jarvis.cx/kb-core/v1',
+        baseUrl: 'https://auth-api.dev.jarvis.cx/api/v1',
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'X-Stack-Access-Type': 'client',
+          'X-Stack-Project-Id': 'a914f06b-5e46-4966-8693-80e4b9f4f409',
+          'X-Stack-Publishable-Client-Key': 'pck_tqsy29b64a585km2g4wnpc57ypjprzzdch8xzpq0xhayr',
         },
       ),
     );
 
     dio.interceptors.add(AuthInterceptor(dio: dio));
 
-    // Thêm interceptor để log request/response
     dio.interceptors.add(LogInterceptor(
       request: true,
       requestHeader: true,

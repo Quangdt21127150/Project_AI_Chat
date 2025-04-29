@@ -15,7 +15,6 @@ class BotViewModel extends ChangeNotifier {
 
   bool _isChatWithMyBot = false;
   final List<MyAiBotMessage> _myAiBotMessages = [];
-  final List<MyAiBotMessage> _myChatAiBotMessages = [];
   Bot _currentBot = Bot.empty();
   Bot _currentChatBot = Bot.empty();
   String _currentOpenAiThreadId = "";
