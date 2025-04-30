@@ -123,13 +123,13 @@ class AuthService {
         return ApiResponse(
           success: true,
           data: response.data,
-          message: 'Lấy thông tin user thành công',
+          message: 'Get user information successful',
           statusCode: response.statusCode ?? 200,
         );
       } else {
         return ApiResponse(
           success: false,
-          message: 'Lấy thông tin user thất bại',
+          message: 'Get user information failed',
           statusCode: response.statusCode ?? 400,
         );
       }
@@ -182,29 +182,24 @@ class AuthService {
         return ApiResponse(
           success: true,
           data: response.data,
-          message: 'Logout thành công',
+          message: 'Logout successful',
           statusCode: response.statusCode ?? 200,
         );
       } else {
         return ApiResponse(
           success: false,
-          message: 'Logout thất bại',
+          message: 'Logout failed',
           statusCode: response.statusCode ?? 400,
         );
       }
     } on DioException catch (e) {
       String errorMessage = 'Unauthorized';
       if (e.response != null) {
-        final errorData = e.response!.data;
+        final errorData = e.response!.data['error'];
 
-        // Check for custom error messages in the response data
-        if (errorData['details'] != null && errorData['details'].isNotEmpty) {
-          // Collect all issues in `details` into a single message
-          log('errorData: ${errorData['details']}');
-          List<String> issues = (errorData['details'] as List<dynamic>)
-              .map<String>((detail) => detail['issue'] ?? 'Unknown issue')
-              .toList();
-          errorMessage = issues.join(', ');
+        if (errorData.isNotEmpty) {
+          log('errorData: $errorData');
+          errorMessage = errorData;
         }
       }
 

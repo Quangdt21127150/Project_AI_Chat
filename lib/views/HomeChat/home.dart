@@ -315,30 +315,35 @@ class _HomeChatState extends State<HomeChat> {
                           icon: const Icon(Icons.menu),
                         ),
                         const Spacer(),
-                        TextButton(
-                          onPressed: () async {
-                            final Uri url = Uri.parse(linkUpgrade);
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Cannot open link!')),
-                              );
-                            }
-                          },
-                          child: const Row(
-                            children: [
-                              Text(
-                                'Upgrade',
-                                style: TextStyle(color: Colors.blue, fontSize: 12),
+                        !botModel.isChatWithMyBot
+                        ? SizedBox(
+                          width: 155,
+                          child: AIDropdown(
+                            listAIItems: _listAIItem,
+                            onChanged: (String? newValue) {
+                              if (newValue != null) {
+                                _updateSelectedAIItem(newValue);
+                              }
+                            },
+                          ),
+                        ) : Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: const Color.fromARGB(255, 238, 240, 243),
+                            ),
+                            height: 30,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Center(
+                              child: Text(
+                                botModel.currentChatBot.assistantName,
+                                style: const TextStyle(fontSize: 12, overflow: TextOverflow.ellipsis,),
+                                maxLines: 1,
                               ),
-                              Icon(
-                                Icons.rocket,
-                                color: Colors.blueAccent,
-                              ),
-                            ],
+                            ),
                           ),
                         ),
+                        const Spacer(),
                         if (!botModel.isChatWithMyBot)
                           Container(
                             padding: EdgeInsets.all(5),
@@ -396,7 +401,7 @@ class _HomeChatState extends State<HomeChat> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 10, bottom: 10, right: 10),
                             child: !botModel.isChatWithMyBot
-                                ? Column(
+                              ? Column(
                               children: [
                                 Expanded(
                                   child: ListView.builder(
@@ -408,29 +413,6 @@ class _HomeChatState extends State<HomeChat> {
                                     },
                                   ),
                                 ),
-                                const SizedBox(height: 10),
-                                if (!botModel.isChatWithMyBot)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 5.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width: 140,
-                                          child: AIDropdown(
-                                            listAIItems: _listAIItem,
-                                            onChanged: (String? newValue) {
-                                              if (newValue != null) {
-                                                _updateSelectedAIItem(newValue);
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                 if (_showSlash)
                                   Consumer<PromptListViewModel>(
                                     builder: (context, promptList, child) {
@@ -484,7 +466,7 @@ class _HomeChatState extends State<HomeChat> {
                                 const SizedBox(height: 5),
                               ],
                             )
-                                : ChatWidget(),
+                            : ChatWidget(),
                           ),
                         ),
                       ],

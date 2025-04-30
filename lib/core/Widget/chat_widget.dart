@@ -25,8 +25,6 @@ class _ChatWidgetState extends State<ChatWidget> {
   final TextEditingController _controller = TextEditingController();
   bool _hasText = false;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -42,7 +40,6 @@ class _ChatWidgetState extends State<ChatWidget> {
         }
       });
     });
-
   }
 
   // @override
@@ -50,8 +47,6 @@ class _ChatWidgetState extends State<ChatWidget> {
   //   super.didChangeDependencies();
   //   Provider.of<BotViewModel>(context, listen: false).isPreview = widget.isPreview;
   // }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +58,12 @@ class _ChatWidgetState extends State<ChatWidget> {
             controller: _scrollController,
             itemCount: messageModel.myAiBotMessages.length,
             itemBuilder: (context, index) {
-              final message =
-              messageModel.myAiBotMessages[index];
+              final message = messageModel.myAiBotMessages[index];
               return _buildMessage(message);
             },
           ),
         ),
         const SizedBox(height: 10),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -78,18 +71,15 @@ class _ChatWidgetState extends State<ChatWidget> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius:
-                  BorderRadius.circular(20),
-                  color: const Color.fromARGB(
-                      255, 238, 240, 243),
+                  borderRadius: BorderRadius.circular(20),
+                  color: const Color.fromARGB(255, 238, 240, 243),
                   border: Border.all(
                     color: Colors.grey.withOpacity(0.5),
                     width: 0.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color:
-                      Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withOpacity(0.2),
                       spreadRadius: 1,
                       blurRadius: 2,
                       offset: Offset(0, 1),
@@ -97,15 +87,13 @@ class _ChatWidgetState extends State<ChatWidget> {
                   ],
                 ),
                 child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextField(
                       controller: _controller,
                       maxLines: null,
                       decoration: InputDecoration(
-                        contentPadding:
-                        const EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 8,
                         ),
@@ -116,31 +104,23 @@ class _ChatWidgetState extends State<ChatWidget> {
                         ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Colors.grey,
-                              width:
-                              1), // Viền bình thường
+                              color: Colors.grey, width: 1), // Viền bình thường
                           borderRadius:
-                          BorderRadius.circular(
-                              20), // Bo cong góc
+                              BorderRadius.circular(20), // Bo cong góc
                         ),
-                        enabledBorder:
-                        OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.grey
-                                .withOpacity(0.5),
+                            color: Colors.grey.withOpacity(0.5),
                             width: 0.5,
                           ),
-                          borderRadius:
-                          BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        focusedBorder:
-                        OutlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.blue,
                             width: 0.5,
                           ),
-                          borderRadius:
-                          BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                     ),
@@ -150,14 +130,9 @@ class _ChatWidgetState extends State<ChatWidget> {
             ),
             IconButton(
               icon: const Icon(Icons.send),
-              onPressed: _hasText
-                  ? _sendMessage
-                  : null,
+              onPressed: _hasText ? _sendMessage : null,
               style: IconButton.styleFrom(
-                foregroundColor:
-                _hasText
-                    ? Colors.black
-                    : Colors.grey,
+                foregroundColor: _hasText ? Colors.black : Colors.grey,
               ),
             ),
           ],
@@ -173,7 +148,8 @@ class _ChatWidgetState extends State<ChatWidget> {
     if (_controller.text.isEmpty) return;
 
     try {
-      Provider.of<BotViewModel>(context, listen: false).askAssistant(_controller.text.isEmpty ? '' : _controller.text);
+      Provider.of<BotViewModel>(context, listen: false)
+          .askAssistant(_controller.text.isEmpty ? '' : _controller.text);
       _controller.clear();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -197,7 +173,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Không thể mở link: $url')),
+          SnackBar(content: Text('Cannot open URL: $url')),
         );
       }
     }
@@ -243,39 +219,37 @@ class _ChatWidgetState extends State<ChatWidget> {
             children: [
               isUser
                   ? Column(
-                children: [
-
-                  Text(
-                    message.content,
-                    style: TextStyle(
-                        color: isError ? Colors.red : Colors.black),
-                  ),
-                ],
-              )
+                      children: [
+                        Text(
+                          message.content,
+                          style: TextStyle(
+                              color: isError ? Colors.red : Colors.black),
+                        ),
+                      ],
+                    )
                   : MarkdownBody(
-                data: message.content,
-                styleSheet: MarkdownStyleSheet(
-                  p: TextStyle(
-                      color: isError ? Colors.red : Colors.black),
-                  a: const TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                  ),
-                  listBullet: TextStyle(
-                      color: isError ? Colors.red : Colors.black),
-                ),
-                selectable: true,
-                onTapLink: (text, href, title) {
-                  if (href != null) {
-                    _launchURL(href);
-                  }
-                },
-              )
+                      data: message.content,
+                      styleSheet: MarkdownStyleSheet(
+                        p: TextStyle(
+                            color: isError ? Colors.red : Colors.black),
+                        a: const TextStyle(
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
+                        listBullet: TextStyle(
+                            color: isError ? Colors.red : Colors.black),
+                      ),
+                      selectable: true,
+                      onTapLink: (text, href, title) {
+                        if (href != null) {
+                          _launchURL(href);
+                        }
+                      },
+                    )
             ],
           );
         }),
       ),
     );
   }
-
 }

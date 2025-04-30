@@ -118,8 +118,6 @@ class AuthViewModel extends ChangeNotifier {
     final accessToken = prefs.getString('accessToken');
     final refreshToken = prefs.getString('refreshToken');
 
-    // await prefs.setString('refreshToken', "deleteRefreshToken");
-
     _isLoggedIn = accessToken != null && refreshToken != null;
     notifyListeners();
   }

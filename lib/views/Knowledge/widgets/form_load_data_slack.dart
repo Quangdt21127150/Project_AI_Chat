@@ -28,9 +28,9 @@ class _FormLoadDataSlackState extends State<FormLoadDataSlack> {
       _formKey.currentState!.save();
 
       bool isSuccess =
-      await Provider.of<KnowledgeBaseProvider>(context, listen: false)
-          .uploadSlack(widget.knowledgeId, _enteredName,
-          _enteredSlackWorkspace, _enteredSlackBotToken);
+          await Provider.of<KnowledgeBaseProvider>(context, listen: false)
+              .uploadSlack(widget.knowledgeId, _enteredName,
+                  _enteredSlackWorkspace, _enteredSlackBotToken);
 
       if (isSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -57,7 +57,7 @@ class _FormLoadDataSlackState extends State<FormLoadDataSlack> {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
-      throw 'Không thể mở liên kết $url';
+      throw 'Cannot open URL: $url';
     }
   }
 
@@ -97,7 +97,7 @@ class _FormLoadDataSlackState extends State<FormLoadDataSlack> {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        "Slack Unit",
+                        "Add Unit",
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
@@ -109,7 +109,8 @@ class _FormLoadDataSlackState extends State<FormLoadDataSlack> {
                   InkWell(
                     onTap: _openLink,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(8),
@@ -137,7 +138,8 @@ class _FormLoadDataSlackState extends State<FormLoadDataSlack> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: Icon(Icons.file_open, color: Colors.blue.shade600),
+                        prefixIcon:
+                            Icon(Icons.file_open, color: Colors.blue.shade600),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -160,7 +162,8 @@ class _FormLoadDataSlackState extends State<FormLoadDataSlack> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: Icon(Icons.work, color: Colors.blue.shade600),
+                        prefixIcon:
+                            Icon(Icons.work, color: Colors.blue.shade600),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -183,7 +186,8 @@ class _FormLoadDataSlackState extends State<FormLoadDataSlack> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: Icon(Icons.vpn_key, color: Colors.blue.shade600),
+                        prefixIcon:
+                            Icon(Icons.vpn_key, color: Colors.blue.shade600),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -205,7 +209,8 @@ class _FormLoadDataSlackState extends State<FormLoadDataSlack> {
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
                       backgroundColor: Colors.red,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -225,7 +230,8 @@ class _FormLoadDataSlackState extends State<FormLoadDataSlack> {
                   ElevatedButton(
                     onPressed: _saveFile,
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
                       backgroundColor: Colors.blue.shade700,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -236,20 +242,20 @@ class _FormLoadDataSlackState extends State<FormLoadDataSlack> {
                       builder: (context, kbProvider, child) {
                         return kbProvider.isLoading
                             ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        )
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              )
                             : const Text(
-                          "Create",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        );
+                                "Save",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              );
                       },
                     ),
                   ),

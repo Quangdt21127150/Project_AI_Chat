@@ -72,28 +72,7 @@ class _BotListWidgetState extends State<BotListWidget> {
         ),
       );
     }
-
-    // if (viewModel.isLoading && bots.data.isEmpty) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
-    //
-    // if (bots.data.isEmpty) {
-    //   return const Center(child: Text("No bots available"));
-    // }
-
-    // return ListView.builder(
-    //   controller: _scrollController,
-    //   itemCount: bots.data.length + (viewModel.hasNext ? 1 : 0),
-    //   itemBuilder: (context, index) {
-    //     if (index < bots.data.length)  {
-    //       viewModel.loadMoreBots();
-    //       return const Center(child: CircularProgressIndicator());
-    //     }
-    //
-    //     final bot = bots.data[index];
-    //     return BotCard(bot: bot);
-    //   },
-    // );
+    
     return Stack(children: [
       ListView.builder(
         controller: _scrollController,

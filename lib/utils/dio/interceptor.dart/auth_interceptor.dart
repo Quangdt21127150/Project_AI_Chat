@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:project_ai_chat/main.dart';
+import 'package:project_ai_chat/utils/dio/dio_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthInterceptor extends Interceptor {
   final Dio dio;
+  final Dio dioAuth = DioAuth().dio;
   AuthInterceptor({required this.dio});
 
   @override
@@ -64,7 +66,7 @@ class AuthInterceptor extends Interceptor {
 
     if (refreshToken != null) {
       try {
-        final response = await dio.post(
+        final response = await dioAuth.post(
           '/auth/sessions/current/refresh',
           options: Options(
             headers: {

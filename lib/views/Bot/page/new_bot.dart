@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_ai_chat/models/bot_request.dart';
 
@@ -13,7 +12,7 @@ class NewBot extends StatefulWidget {
 class _NewBotState extends State<NewBot> {
   final _formKey = GlobalKey<FormState>();
 
-  //TextFormField
+  // TextFormField
   String _enteredName = "";
   String _enteredPrompt = "";
   String _enteredDescription = "";
@@ -24,10 +23,11 @@ class _NewBotState extends State<NewBot> {
 
       widget.addBot(
         BotRequest(
-            assistantName: _enteredName,
-            instructions: _enteredPrompt,
-            description: _enteredDescription,
-      ));
+          assistantName: _enteredName,
+          instructions: _enteredPrompt,
+          description: _enteredDescription,
+        ),
+      );
       Navigator.pop(context);
     }
   }
@@ -35,10 +35,12 @@ class _NewBotState extends State<NewBot> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
-      contentPadding: const EdgeInsets.all(20.0),
+      backgroundColor: Colors.white,
+      elevation: 8,
+      contentPadding: const EdgeInsets.all(24.0),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -51,23 +53,40 @@ class _NewBotState extends State<NewBot> {
                 children: [
                   const Text(
                     'Create New Bot',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.black87,
+                    ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close),
+                    icon: const Icon(Icons.close, color: Colors.grey),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
               TextFormField(
-                // controller: nameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Name',
                   hintText: 'Enter a AI Bot\'s Name...',
-                  suffixIcon: Icon(Icons.edit),
+                  suffixIcon: const Icon(Icons.edit, color: Colors.grey),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey[300]!),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.blue),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -79,34 +98,62 @@ class _NewBotState extends State<NewBot> {
                   _enteredName = value!;
                 },
               ),
+              const SizedBox(height: 12),
               const Text(
                 'Example: Professional Translator | Writing Expert | Code Assistant',
                 style: TextStyle(color: Colors.grey, fontSize: 12),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               TextFormField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Description',
                   hintText: 'Enter a description...',
-                  suffixIcon: Icon(Icons.description),
+                  suffixIcon: const Icon(Icons.description, color: Colors.grey),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey[300]!),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.blue),
+                  ),
                 ),
                 onSaved: (value) {
                   _enteredDescription = value ?? "";
                 },
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
               TextFormField(
                 maxLines: 4,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Prompt',
                   hintText: 'Enter a AI Bot\'s Prompt Content...',
-                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey[300]!),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.blue),
+                  ),
                 ),
                 onSaved: (value) {
                   _enteredPrompt = value ?? "";
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
               const Text(
                 'Example: You are an experienced translator with skills in multiple languages worldwide.',
                 style: TextStyle(color: Colors.grey, fontSize: 12),
@@ -120,63 +167,57 @@ class _NewBotState extends State<NewBot> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: SizedBox(
-                height: 40,
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: OutlinedButton.styleFrom(
-                    //padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: const BorderSide(
-                        color: Colors.blue, width: 1),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(10)),
-                    ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
-                    "Cancel",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  elevation: 2,
+                ),
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
                   ),
                 ),
               ),
             ),
-
             const SizedBox(width: 16),
-
             Expanded(
               child: Container(
-                height: 40,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Colors.blue, Colors.lightBlueAccent],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
+                    colors: [Colors.blue, Colors.cyan],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: ElevatedButton(
                   onPressed: _saveBot,
                   style: ElevatedButton.styleFrom(
-                    //padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors
-                        .transparent, // Quan trọng để giữ gradient
-                    shadowColor:
-                    Colors.transparent, // Loại bỏ bóng
-                    shape: const RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(10)),
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    elevation: 2,
                   ),
                   child: const Text(
                     "Create",
                     style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

@@ -22,17 +22,16 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
   String _enteredWikiPageUrl = "";
   String _enteredUsername = "";
   String _enteredAccessToken = "";
-  final String url =
-      'https://jarvis.cx/help/knowledge-base/connectors/confluence';
+  final String url = 'https://jarvis.cx/help/knowledge-base/connectors/confluence';
 
   void _saveFile() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
       bool isSuccess =
-      await Provider.of<KnowledgeBaseProvider>(context, listen: false)
-          .uploadConfluence(widget.knowledgeId, _enteredName,
-          _enteredWikiPageUrl, _enteredUsername, _enteredAccessToken);
+          await Provider.of<KnowledgeBaseProvider>(context, listen: false)
+              .uploadConfluence(widget.knowledgeId, _enteredName,
+                  _enteredWikiPageUrl, _enteredUsername, _enteredAccessToken);
 
       if (isSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -59,7 +58,7 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
-      throw 'Không thể mở liên kết $url';
+      throw 'Cannot open URL: $url';
     }
   }
 
@@ -99,7 +98,7 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        "Confluence Unit",
+                        "Add Unit",
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
@@ -111,7 +110,8 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
                   InkWell(
                     onTap: _openLink,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(8),
@@ -139,7 +139,8 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: Icon(Icons.file_open, color: Colors.blue.shade600),
+                        prefixIcon:
+                            Icon(Icons.file_open, color: Colors.blue.shade600),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -162,7 +163,8 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: Icon(Icons.link, color: Colors.blue.shade600),
+                        prefixIcon:
+                            Icon(Icons.link, color: Colors.blue.shade600),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -185,7 +187,8 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: Icon(Icons.account_circle, color: Colors.blue.shade600),
+                        prefixIcon: Icon(Icons.account_circle,
+                            color: Colors.blue.shade600),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -208,7 +211,8 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
-                        prefixIcon: Icon(Icons.vpn_key, color: Colors.blue.shade600),
+                        prefixIcon:
+                            Icon(Icons.vpn_key, color: Colors.blue.shade600),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -230,7 +234,8 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
                       backgroundColor: Colors.red,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -250,7 +255,8 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
                   ElevatedButton(
                     onPressed: _saveFile,
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
                       backgroundColor: Colors.blue.shade700,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -261,20 +267,20 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
                       builder: (context, kbProvider, child) {
                         return kbProvider.isLoading
                             ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        )
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              )
                             : const Text(
-                          "Create",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        );
+                                "Save",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              );
                       },
                     ),
                   ),

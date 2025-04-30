@@ -78,7 +78,7 @@ class _FormLoadDataState extends State<FormLoadData> {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
-      throw 'Không thể mở liên kết $url';
+      throw 'Cannot open URL: $url';
     }
   }
 
@@ -106,7 +106,7 @@ class _FormLoadDataState extends State<FormLoadData> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Add New Knowledge",
+                  "Add File",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
@@ -218,7 +218,7 @@ class _FormLoadDataState extends State<FormLoadData> {
                         ),
                       )
                           : const Text(
-                        "Create",
+                        "Save",
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,
