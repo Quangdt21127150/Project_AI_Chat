@@ -403,8 +403,7 @@ class _HomeChatState extends State<HomeChat> {
                                     controller: _scrollController,
                                     itemCount: messageModel.messages.length,
                                     itemBuilder: (context, index) {
-                                      final message =
-                                      messageModel.messages[index];
+                                      final message = messageModel.messages[index];
                                       return BuildMessage(message: message);
                                     },
                                   ),
@@ -438,31 +437,22 @@ class _HomeChatState extends State<HomeChat> {
                                       if (promptList.isLoading) {
                                         return const CircularProgressIndicator();
                                       } else if (promptList.hasError) {
-                                        return Text(
-                                            'Có lỗi xảy ra: ${promptList.error}');
+                                        return Text('Error occur: ${promptList.error}');
                                       } else {
                                         return Padding(
                                           padding: const EdgeInsets.all(5),
                                           child: Container(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width /
-                                                3 *
-                                                2,
+                                            width: MediaQuery.of(context).size.width / 3 * 2,
                                             decoration: BoxDecoration(
                                               border: Border.all(
-                                                color: const Color.fromARGB(
-                                                    255, 158, 198, 232),
+                                                color: const Color.fromARGB(255, 158, 198, 232),
                                                 width: 1.0,
                                               ),
                                               borderRadius:
                                               BorderRadius.circular(20.0),
                                             ),
                                             constraints: BoxConstraints(
-                                              maxHeight: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                                  3,
+                                              maxHeight: MediaQuery.of(context).size.height / 3,
                                             ),
                                             child: ListView.builder(
                                               itemCount: promptList.allPrompts.items.length,
@@ -472,9 +462,7 @@ class _HomeChatState extends State<HomeChat> {
                                                   onTap: () {
                                                     _controller.text = "";
                                                     _showSlash = false;
-                                                    _openPromptDetailsDialog(
-                                                        context,
-                                                        promptList.allPrompts.items[index]);
+                                                    _openPromptDetailsDialog(context, promptList.allPrompts.items[index]);
                                                   },
                                                 );
                                               },

@@ -17,8 +17,7 @@ class KnowledgeScreen extends StatefulWidget {
 }
 
 class _KnowledgeScreenState extends State<KnowledgeScreen> {
-  late ScrollController
-      _scrollController; // variable for load more conversation
+  late ScrollController _scrollController;
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -27,7 +26,6 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
 
     _scrollController = ScrollController()
       ..addListener(() {
-        // Khi cuộn đến cuối danh sách
         if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
           Provider.of<KnowledgeBaseProvider>(context, listen: false)
@@ -38,8 +36,8 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
 
   void _addKnowledge(String knowledgeName, String description) async {
     bool isSuccess =
-        await Provider.of<KnowledgeBaseProvider>(context, listen: false)
-            .addKnowledgeBase(knowledgeName, description);
+    await Provider.of<KnowledgeBaseProvider>(context, listen: false)
+        .addKnowledgeBase(knowledgeName, description);
 
     if (isSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -69,8 +67,8 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
   void _editKnowledge(
       String id, int index, String knowledgeName, String description) async {
     bool isSuccess =
-        await Provider.of<KnowledgeBaseProvider>(context, listen: false)
-            .editKnowledgeBase(id, index, knowledgeName, description);
+    await Provider.of<KnowledgeBaseProvider>(context, listen: false)
+        .editKnowledgeBase(id, index, knowledgeName, description);
 
     if (isSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -102,15 +100,6 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
 
   void _openEditKnowledgeDialog(
       BuildContext context, Knowledge knowledge, int index) {
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => EditKnowledge(
-    //     editKnowledge: (knowledge) {
-    //       _editKnowledge(knowledge, index);
-    //     },
-    //     knowledge: knowledge,
-    //   ),
-    // );
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditKnowledge(
@@ -126,8 +115,8 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
 
   void _removeKnowledge(String id, int index) async {
     bool isSuccess =
-        await Provider.of<KnowledgeBaseProvider>(context, listen: false)
-            .deleteKnowledgeBase(id, index);
+    await Provider.of<KnowledgeBaseProvider>(context, listen: false)
+        .deleteKnowledgeBase(id, index);
 
     if (isSuccess) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -144,23 +133,6 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
         ),
       );
     }
-
-    // Undo remove knowledge
-    // ScaffoldMessenger.of(context).clearSnackBars();
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   SnackBar(
-    //     duration: const Duration(seconds: 3),
-    //     content: const Text("Knowledge Base has been Deleted!"),
-    //     action: SnackBarAction(
-    //       label: 'Undo',
-    //       onPressed: () {
-    //         setState(() {
-    //           _listKnowledge.insert(knowledgeDeleteIndex, knowledge);
-    //         });
-    //       },
-    //     ),
-    //   ),
-    // );
   }
 
   void _onSearch() {
@@ -172,11 +144,11 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.indigo,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           "Knowledge Bases",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
         ),
         actions: [
           IconButton(
@@ -185,45 +157,73 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
             },
             icon: const Icon(Icons.add),
             style: TextButton.styleFrom(
-              foregroundColor: const Color.fromARGB(255, 60, 56, 56),
+              foregroundColor: Colors.white,
             ),
           ),
         ],
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 prefixIcon: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: _onSearch, // Nhấn icon tìm kiếm để gọi API
+                  icon: const Icon(Icons.search, color: Colors.grey),
+                  onPressed: _onSearch,
                 ),
-                hintText: 'Search',
+                hintText: 'Search Knowledge...',
+                hintStyle: const TextStyle(color: Colors.grey),
+                filled: true,
+                fillColor: Colors.white,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.grey[300]!),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.cyan),
                 ),
               ),
+              onChanged: (value) {
+                _onSearch();
+              },
+              onSubmitted: (value) {
+                _onSearch();
+              },
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 20),
             Expanded(
               child: Consumer<KnowledgeBaseProvider>(
                 builder: (context, kbProvider, child) {
                   if (kbProvider.isLoading &&
                       kbProvider.knowledgeBases.isEmpty) {
-                    // Display loading indicator while fetching conversations
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (kbProvider.error != null &&
                       kbProvider.knowledgeBases.isEmpty) {
-                    // Display error message if there's an error
                     return Center(
                       child: Text(
                         kbProvider.error ?? 'Server error, please try again',
                         style: const TextStyle(color: Colors.red, fontSize: 16),
+                      ),
+                    );
+                  }
+                  if (kbProvider.knowledgeBases.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'No knowledge base found',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     );
                   }
@@ -234,7 +234,6 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
                     itemCount: kbProvider.knowledgeBases.length + 1,
                     itemBuilder: (context, index) {
                       if (index == kbProvider.knowledgeBases.length) {
-                        // Loader khi đang tải thêm
                         if (kbProvider.hasNext &&
                             kbProvider.knowledgeBases.length >= 8) {
                           return const Padding(
@@ -242,7 +241,7 @@ class _KnowledgeScreenState extends State<KnowledgeScreen> {
                             child: Center(child: CircularProgressIndicator()),
                           );
                         } else {
-                          return const SizedBox.shrink(); // Không còn dữ liệu
+                          return const SizedBox.shrink();
                         }
                       }
 

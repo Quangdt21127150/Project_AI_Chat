@@ -14,7 +14,7 @@ class ChatService {
   late final Dio dio;
 
   ChatService({required this.prefs}) {
-    dio = DioClient().dio;
+    dio = DioJarvis().dio;
   }
 
   Future<ChatResponse> sendMessage({

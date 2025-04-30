@@ -5,7 +5,7 @@ import 'package:project_ai_chat/models/prompt_list.dart';
 
 class PromptService {
 
-  final dio = DioClient().dio;
+  final dio = DioJarvis().dio;
 
   Future<PromptList> fetchAllPrompts() async {
     try {

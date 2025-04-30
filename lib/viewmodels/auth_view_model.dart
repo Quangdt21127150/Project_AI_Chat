@@ -35,6 +35,7 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   final int unlimited = 99999;
+
   Future<bool> register({
     required String username,
     required String email,
@@ -53,16 +54,12 @@ class AuthViewModel extends ChangeNotifier {
 
       final response = await _authService.register(user);
 
-      if (response.success && response.data['user'] != null) {
-        // Chỉ lưu thông tin user
-        // final prefs = await SharedPreferences.getInstance();
-        // await prefs.setString('user', jsonEncode(response.data['user']));
-
+      if (response.success && response.data != null) {
         isLoading = false;
         notifyListeners();
         return true;
       } else {
-        error = response.message ?? 'Đăng ký thất bại';
+        error = response.message ?? 'Sign up failed';
         isLoading = false;
         notifyListeners();
         return false;
@@ -98,33 +95,11 @@ class AuthViewModel extends ChangeNotifier {
           await prefs.setString('refreshToken', response.data['refresh_token']);
         }
 
-        // Lấy accestoken knowledge base server
-        // final responseKB = await _authService
-        //     .loginFromExternalClient(response.data['access_token']);
-        //
-        // if (responseKB.success && responseKB.data != null) {
-        //   // Lưu access token knowledgebase server
-        //   if (responseKB.data['access_token'] != null) {
-        //     await prefs.setString(
-        //         'kbAccessToken', responseKB.data['access_token']);
-        //   }
-        //   // Lưu refresh token knowledgebase server
-        //   if (responseKB.data['refresh_token'] != null) {
-        //     await prefs.setString(
-        //         'kbRefreshToken', responseKB.data['refresh_token']);
-        //   }
-        // } else {
-        //   error = response.message ?? 'Đăng nhập thất bại';
-        //   isLoading = false;
-        //   notifyListeners();
-        //   return false;
-        // }
-
         isLoading = false;
         notifyListeners();
         return true;
       } else {
-        error = response.message ?? 'Đăng nhập thất bại';
+        error = response.message ?? 'Login failed';
         isLoading = false;
         notifyListeners();
         return false;

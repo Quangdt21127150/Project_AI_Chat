@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:project_ai_chat/utils/dio/interceptor.dart/auth_interceptor.dart';
 
-class DioClient {
-  static final DioClient _instance = DioClient._internal();
+class DioJarvis {
+  static final DioJarvis _instance = DioJarvis._internal();
   late Dio dio;
 
-  factory DioClient() {
+  factory DioJarvis() {
     return _instance;
   }
 
-  DioClient._internal() {
+  DioJarvis._internal() {
     dio = Dio(
       BaseOptions(
         baseUrl: 'https://api.dev.jarvis.cx/api/v1',

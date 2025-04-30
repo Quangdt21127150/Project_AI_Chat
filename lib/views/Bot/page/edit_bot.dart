@@ -196,10 +196,10 @@ class _NewBotState extends State<EditBot> {
                                   backgroundColor: Colors
                                       .transparent, // Quan trọng để giữ gradient
                                   shadowColor:
-                                  Colors.transparent, // Loại bỏ bóng
+                                      Colors.transparent, // Loại bỏ bóng
                                   shape: const RoundedRectangleBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                        BorderRadius.all(Radius.circular(10)),
                                   ),
                                 ),
                                 child: const Text(
@@ -225,7 +225,7 @@ class _NewBotState extends State<EditBot> {
                                       color: Colors.blue, width: 1),
                                   shape: const RoundedRectangleBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                        BorderRadius.all(Radius.circular(10)),
                                   ),
                                 ),
                                 child: const Text(
@@ -240,7 +240,6 @@ class _NewBotState extends State<EditBot> {
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 16),
                       const Text("Imported Knowledge"),
                       Column(
@@ -252,46 +251,46 @@ class _NewBotState extends State<EditBot> {
                                 children: botViewModel.knowledgeList
                                     .map(
                                       (knowledge) => Card(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Image.network(
-                                            'https://img.freepik.com/premium-photo/green-white-graphic-stack-barrels-with-green-top_1103290-132885.jpg',
-                                            width: 30,
-                                            errorBuilder: (context, error,
-                                                stackTrace) {
-                                              return const Icon(Icons
-                                                  .storage); // Hiển thị icon lỗi nếu không load được hình
-                                            },
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                              knowledge.name,
-                                              style: const TextStyle(
-                                                  fontSize: 16),
-                                            ),
-                                          ),
-                                          Row(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
                                             children: [
-                                              IconButton(
-                                                icon: const Icon(
-                                                    Icons.delete),
-                                                iconSize: 20,
-                                                color: Colors.red,
-                                                onPressed: () {
-                                                  _handleDeleteKnowledge(
-                                                      knowledge.id);
+                                              Image.network(
+                                                'assets/images/open-book.png',
+                                                width: 30,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const Icon(Icons
+                                                      .storage); // Hiển thị icon lỗi nếu không load được hình
                                                 },
                                               ),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                  knowledge.name,
+                                                  style: const TextStyle(
+                                                      fontSize: 16),
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                    icon: const Icon(
+                                                        Icons.delete),
+                                                    iconSize: 20,
+                                                    color: Colors.red,
+                                                    onPressed: () {
+                                                      _handleDeleteKnowledge(
+                                                          knowledge.id);
+                                                    },
+                                                  ),
+                                                ],
+                                              )
                                             ],
-                                          )
-                                        ],
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                )
+                                    )
                                     .toList(),
                               );
                             },
@@ -308,7 +307,7 @@ class _NewBotState extends State<EditBot> {
                                   width: 1, color: Colors.blue),
                               shape: const RoundedRectangleBorder(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10)),
+                                    BorderRadius.all(Radius.circular(10)),
                               ),
                             ),
                             child: const Row(

@@ -30,9 +30,9 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
       _formKey.currentState!.save();
 
       bool isSuccess =
-          await Provider.of<KnowledgeBaseProvider>(context, listen: false)
-              .uploadConfluence(widget.knowledgeId, _enteredName,
-                  _enteredWikiPageUrl, _enteredUsername, _enteredAccessToken);
+      await Provider.of<KnowledgeBaseProvider>(context, listen: false)
+          .uploadConfluence(widget.knowledgeId, _enteredName,
+          _enteredWikiPageUrl, _enteredUsername, _enteredAccessToken);
 
       if (isSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -65,215 +65,225 @@ class _FormLoadDataConfluenceState extends State<FormLoadDataConfluence> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            "Add Unit",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 10,
+      child: Container(
+        width: 400,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white, Colors.grey.shade400],
           ),
-          InkWell(
-            onTap: _openLink,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Text(
-                'Docs',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
-          ),
-        ],
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 14),
-              child: Row(
-                // mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.network(
-                    "https://static.wixstatic.com/media/f9d4ea_637d021d0e444d07bead34effcb15df1~mv2.png/v1/fill/w_340,h_340,al_c,lg_1,q_85,enc_auto/Apt-website-icon-confluence.png",
-                    width: 50,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons
-                          .storage); // Hiển thị icon lỗi nếu không load được hình
-                    },
-                  ),
-                  const SizedBox(width: 4),
-                  const Text(
-                    "Confluence",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                      hintText: 'Name',
-                      suffixIcon: Icon(Icons.edit),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please input unit knowledge name';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _enteredName = value!;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 14,
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Wiki Page URL',
-                      hintText: 'Wiki Page URL',
-                      suffixIcon: Icon(Icons.edit),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please input wiki page url';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _enteredWikiPageUrl = value!;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 14,
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Confluence Username',
-                      hintText: 'Confluence Username:',
-                      suffixIcon: Icon(Icons.edit),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please input confluence username';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _enteredUsername = value!;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 14,
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Confluence Access Token',
-                      hintText: 'Confluence Access Token:',
-                      suffixIcon: Icon(Icons.edit),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please input confluence access token';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _enteredAccessToken = value!;
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(20),
         ),
-      ),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: SizedBox(
-                height: 40,
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: OutlinedButton.styleFrom(
-                    //padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: const BorderSide(color: Colors.blue, width: 1),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                  ),
-                  child: const Text(
-                    "Cancel",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Colors.blue, Colors.lightBlueAccent],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Consumer<KnowledgeBaseProvider>(
-                  builder: (context, kbProvider, child) {
-                    return ElevatedButton(
-                      onPressed: kbProvider.isLoading ? null : _saveFile,
-                      style: ElevatedButton.styleFrom(
-                        //padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor:
-                            Colors.transparent, // Quan trọng để giữ gradient
-                        shadowColor: Colors.transparent, // Loại bỏ bóng
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Image.network(
+                        "https://static.wixstatic.com/media/f9d4ea_637d021d0e444d07bead34effcb15df1~mv2.png/v1/fill/w_340,h_340,al_c,lg_1,q_85,enc_auto/Apt-website-icon-confluence.png",
+                        width: 40,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.storage,
+                              size: 40, color: Colors.blue.shade600);
+                        },
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        "Confluence Unit",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.blue.shade800,
                         ),
                       ),
-                      child: kbProvider.isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Text(
-                              "Save",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    );
-                  },
+                    ],
+                  ),
+                  InkWell(
+                    onTap: _openLink,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'Docs',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        hintText: 'Enter name',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: Icon(Icons.file_open, color: Colors.blue.shade600),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please input unit knowledge name';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _enteredName = value!;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Wiki Page URL',
+                        hintText: 'Enter Wiki Page URL',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: Icon(Icons.link, color: Colors.blue.shade600),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please input wiki page url';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _enteredWikiPageUrl = value!;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Confluence Username',
+                        hintText: 'Enter username',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: Icon(Icons.account_circle, color: Colors.blue.shade600),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please input confluence username';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _enteredUsername = value!;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Confluence Access Token',
+                        hintText: 'Enter access token',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: Icon(Icons.vpn_key, color: Colors.blue.shade600),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please input confluence access token';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _enteredAccessToken = value!;
+                      },
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
+                    ),
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton(
+                    onPressed: _saveFile,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      backgroundColor: Colors.blue.shade700,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 3,
+                    ),
+                    child: Consumer<KnowledgeBaseProvider>(
+                      builder: (context, kbProvider, child) {
+                        return kbProvider.isLoading
+                            ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                            : const Text(
+                          "Create",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ],
+      ),
     );
   }
 }

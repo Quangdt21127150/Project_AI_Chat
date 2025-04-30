@@ -18,8 +18,7 @@ class Knowledge {
       name: json['knowledgeName'] ?? '',
       id: json['id'] ?? '',
       description: json['description'] ?? '',
-      imageUrl:
-          "https://img.freepik.com/premium-photo/green-white-graphic-stack-barrels-with-green-top_1103290-132885.jpg",
+      imageUrl: "assets/images/open-book.png",
     );
   }
 

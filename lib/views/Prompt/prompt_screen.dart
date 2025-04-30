@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project_ai_chat/views/Prompt/widgets/new_prompt.dart';
 import 'package:project_ai_chat/views/Prompt/widgets/prompt_details.dart';
@@ -72,12 +71,12 @@ class _PromptScreenState extends State<PromptScreen> {
   void _openPromptDetailsDialog(BuildContext context, Prompt prompt) {
     PromptDetails.show(
       context,
-      promptId: prompt.id, // Pass prompt.id
-      itemTitle: prompt.title, // Pass prompt.title
+      promptId: prompt.id,
+      itemTitle: prompt.title,
       content: prompt.content,
       category: prompt.category,
       description: prompt.description,
-      language: prompt.language ?? 'English', // Handle null language
+      language: prompt.language,
       isPublic: prompt.isPublic,
       isFavorite: _favoriteStates[prompt.id] ?? prompt.isFavorite,
     ).then((result) {

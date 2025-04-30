@@ -45,7 +45,9 @@ class PromptListViewModel extends ChangeNotifier {
     if (kDebugMode) {
       print("-------------------->>>>>>> ${pr.category}");
     }
-    final result = await _service.fetchPrompts(pr);
+    var result = await _service.fetchPrompts(pr);
+    pr = pr.copyWith(limit: result.total);
+    result = await _service.fetchPrompts(pr);
     _isLoading = false;
     notifyListeners();
     return result;

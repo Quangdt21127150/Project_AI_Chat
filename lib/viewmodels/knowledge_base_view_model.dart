@@ -61,7 +61,8 @@ class KnowledgeBaseProvider with ChangeNotifier {
       _hasNext = true;
     }
 
-    final response = await _kbService.getAllKnowledgeBases(_query, _offset, _limit);
+    final response =
+        await _kbService.getAllKnowledgeBases(_query, _offset, _limit);
 
     if (response.success && response.data != null) {
       if (isLoadMore == false) {
@@ -99,8 +100,7 @@ class KnowledgeBaseProvider with ChangeNotifier {
           id: response.data['id'],
           name: response.data['knowledgeName'],
           description: response.data['description'],
-          imageUrl:
-              "https://img.freepik.com/premium-photo/green-white-graphic-stack-barrels-with-green-top_1103290-132885.jpg",
+          imageUrl: "assets/images/open-book.png",
         );
         _knowledgeBases.add(newKnowledge);
         isLoading = false;
@@ -135,8 +135,7 @@ class KnowledgeBaseProvider with ChangeNotifier {
           id: id,
           name: knowledgeName,
           description: description,
-          imageUrl:
-              "https://img.freepik.com/premium-photo/green-white-graphic-stack-barrels-with-green-top_1103290-132885.jpg",
+          imageUrl: "assets/images/open-book.png",
         );
 
         isLoading = false;
@@ -345,7 +344,8 @@ class KnowledgeBaseProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> uploadWebUrl(String knowledgeId, String webName, String webUrl) async {
+  Future<bool> uploadWebUrl(
+      String knowledgeId, String webName, String webUrl) async {
     isLoading = true;
     error = null;
     notifyListeners();
@@ -382,14 +382,15 @@ class KnowledgeBaseProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> uploadSlack(String knowledgeId, String slackName, String slackWorkspace, String slackBotToken) async {
+  Future<bool> uploadSlack(String knowledgeId, String slackName,
+      String slackWorkspace, String slackBotToken) async {
     isLoading = true;
     error = null;
     notifyListeners();
 
     try {
-      final response =
-          await _kbService.uploadSlack(knowledgeId, slackName, slackWorkspace, slackBotToken);
+      final response = await _kbService.uploadSlack(
+          knowledgeId, slackName, slackWorkspace, slackBotToken);
 
       if (response.success) {
         final knowledgeIndex =
@@ -419,14 +420,15 @@ class KnowledgeBaseProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> uploadConfluence(String knowledgeId, String confluenceName, String wikiPageUrl, String username, String accessToken) async {
+  Future<bool> uploadConfluence(String knowledgeId, String confluenceName,
+      String wikiPageUrl, String username, String accessToken) async {
     isLoading = true;
     error = null;
     notifyListeners();
 
     try {
-      final response =
-          await _kbService.uploadConfluence(knowledgeId, confluenceName, wikiPageUrl, username, accessToken);
+      final response = await _kbService.uploadConfluence(
+          knowledgeId, confluenceName, wikiPageUrl, username, accessToken);
 
       if (response.success) {
         final knowledgeIndex =
@@ -455,6 +457,4 @@ class KnowledgeBaseProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-
 }
-

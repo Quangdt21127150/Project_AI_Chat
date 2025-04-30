@@ -6,7 +6,7 @@ import 'package:project_ai_chat/models/response/email_chat_response.dart';
 class EmailChatService {
   late final Dio dio;
   EmailChatService() {
-    dio = DioClient().dio;
+    dio = DioJarvis().dio;
   }
   Future<List<String>> suggestEmailIdeas({
     required String action,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:project_ai_chat/views/Knowledge/widgets/load_data_knowledge.dart';
 import 'package:project_ai_chat/models/knowledge.dart';
-import 'package:project_ai_chat/views/Knowledge/widgets/load_data_knowledge.dart';
 import 'package:project_ai_chat/viewmodels/knowledge_base_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -18,12 +17,10 @@ class EditKnowledge extends StatefulWidget {
 
 class _NewKnowledgeState extends State<EditKnowledge> {
   final _formKey = GlobalKey<FormState>();
-  late ScrollController
-      _scrollController; // variable for load more conversation
+  late ScrollController _scrollController;
 
-  // Text Form Field
-  String _enteredName = ""; // name of knowledgbase
-  String _enteredPrompt = ""; // description for knowledbase
+  String _enteredName = "";
+  String _enteredPrompt = "";
 
   @override
   void initState() {
@@ -37,7 +34,6 @@ class _NewKnowledgeState extends State<EditKnowledge> {
 
     _scrollController = ScrollController()
       ..addListener(() {
-        // Khi cuộn đến cuối danh sách
         if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
           Provider.of<KnowledgeBaseProvider>(context, listen: false)
@@ -55,8 +51,7 @@ class _NewKnowledgeState extends State<EditKnowledge> {
           name: _enteredName,
           description: _enteredPrompt,
           id: widget.knowledge.id,
-          imageUrl:
-              "https://img.freepik.com/premium-photo/green-white-graphic-stack-barrels-with-green-top_1103290-132885.jpg",
+          imageUrl: "assets/images/open-book.png",
         ),
       );
       Navigator.pop(context);
@@ -80,19 +75,9 @@ class _NewKnowledgeState extends State<EditKnowledge> {
     }
   }
 
-  // Add File
-  void _addNewFile(String newData) {
-    // setState(() {
-    //   _listFiles.add(newData);
-    // });
-  }
+  void _addNewFile(String newData) {}
 
-  // Remove File
-  void _removeFile(String newData) {
-    // setState(() {
-    //   _listFiles.remove(newData);
-    // });
-  }
+  void _removeFile(String newData) {}
 
   void _removeUnit(String unitId) async {
     bool isSuccess =
@@ -124,278 +109,255 @@ class _NewKnowledgeState extends State<EditKnowledge> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.indigo,
         title: const Text(
           "Edit Knowledge Base",
           style: TextStyle(
-            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Edit name & descriptions',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 14),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-
-                    // Text input for name of knowledgebase
-                    TextFormField(
-                      initialValue: _enteredName,
-                      decoration: const InputDecoration(
-                        labelText: 'Name',
-                        hintText: 'Input name',
-                        suffixIcon: Icon(Icons.edit),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please input name';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _enteredName = value!;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Ex: Professional Translator | Writing Specialist | Code Assistant',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
-                    ),
-                    const SizedBox(height: 15),
-
-                    // Text input for description of knowledgebase
-                    TextFormField(
-                      initialValue: _enteredPrompt,
-                      maxLines: 4,
-                      decoration: const InputDecoration(
-                        // labelText: 'Prompt',
-                        hintText: 'Enter the knowledge base description...',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please input the description';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _enteredPrompt = value!;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'For example: "You are an experienced translator with skills in multiple languages around the world."',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: _saveKnowledgeBase,
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              backgroundColor: Colors.blue,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                              ),
-                            ),
-                            child: const Text(
-                              "Edit",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
+              Expanded(
+                child: Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Knowledge Details",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-
-                    const Text(
-                      'Add Units',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    LoadDataKnowledge(
-                      addNewData: _addNewFile,
-                      removeData: _removeFile,
-                      knowledgeId: widget.knowledge.id,
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'List Units',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    Consumer<KnowledgeBaseProvider>(
-                      builder: (context, kbProvider, child) {
-                        Knowledge kb =
-                            kbProvider.getKnowledgeById(widget.knowledge.id);
-
-                        if (kbProvider.isLoading && kb.listUnits.isEmpty) {
-                          // Display loading indicator while fetching conversations
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-
-                        if (kbProvider.error != null && kb.listUnits.isEmpty) {
-                          // Display error message if there's an error
-                          return Center(
-                            child: Text(
-                              kbProvider.error ??
-                                  'Server error, please try again',
-                              style: const TextStyle(
-                                  color: Colors.red, fontSize: 16),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            initialValue: _enteredName,
+                            decoration: InputDecoration(
+                              labelText: "Name",
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
-                          );
-                        }
-
-                        return SizedBox(
-                          height: 300,
-                          child: ListView.builder(
-                            controller: _scrollController,
-                            shrinkWrap: true,
-                            itemCount: kb.listUnits.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index == kb.listUnits.length) {
-                                // Loader khi đang tải thêm
-                                if (kbProvider.hasNextUnit) {
-                                  return const Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Center(
-                                        child: CircularProgressIndicator()),
-                                  );
-                                } else {
-                                  return const SizedBox
-                                      .shrink(); // Không còn dữ liệu
-                                }
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please input name';
                               }
-                              return Slidable(
-                                endActionPane: ActionPane(
-                                  motion: const StretchMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      onPressed: kbProvider.isLoading
-                                          ? null
-                                          : (context) {
-                                              _removeUnit(
-                                                  kb.listUnits[index].unitId);
-                                            },
-                                      icon: Icons.delete,
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  ],
-                                ),
-                                child: Card(
-                                  color: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        // const Icon(Icons.storage,
-                                        //     color: Colors.green, size: 30),
-                                        Image.network(
-                                          getImageByUnitType(
-                                              kb.listUnits[index].unitType),
-                                          width: 34,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return const Icon(Icons
-                                                .storage); // Hiển thị icon lỗi nếu không load được hình
-                                          },
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: Text(
-                                            kb.listUnits[index].unitName,
-                                            style:
-                                                const TextStyle(fontSize: 16),
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _enteredName = value!;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            initialValue: _enteredPrompt,
+                            maxLines: 3,
+                            decoration: InputDecoration(
+                              labelText: "Description",
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please input the description';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _enteredPrompt = value!;
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Add Units',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          LoadDataKnowledge(
+                            addNewData: _addNewFile,
+                            removeData: _removeFile,
+                            knowledgeId: widget.knowledge.id,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'List Units',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          Consumer<KnowledgeBaseProvider>(
+                            builder: (context, kbProvider, child) {
+                              Knowledge kb = kbProvider
+                                  .getKnowledgeById(widget.knowledge.id);
+
+                              if (kbProvider.isLoading &&
+                                  kb.listUnits.isEmpty) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+
+                              if (kbProvider.error != null &&
+                                  kb.listUnits.isEmpty) {
+                                return Center(
+                                  child: Text(
+                                    kbProvider.error ??
+                                        'Server error, please try again',
+                                    style: const TextStyle(
+                                        color: Colors.red, fontSize: 16),
+                                  ),
+                                );
+                              }
+
+                              return SizedBox(
+                                height: 300,
+                                child: ListView.builder(
+                                  controller: _scrollController,
+                                  shrinkWrap: true,
+                                  itemCount: kb.listUnits.length + 1,
+                                  itemBuilder: (context, index) {
+                                    if (index == kb.listUnits.length) {
+                                      if (kbProvider.hasNextUnit) {
+                                        return const Padding(
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Center(
+                                              child:
+                                                  CircularProgressIndicator()),
+                                        );
+                                      } else {
+                                        return const SizedBox.shrink();
+                                      }
+                                    }
+                                    return Slidable(
+                                      endActionPane: ActionPane(
+                                        motion: const StretchMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            onPressed: kbProvider.isLoading
+                                                ? null
+                                                : (context) {
+                                                    _removeUnit(kb
+                                                        .listUnits[index]
+                                                        .unitId);
+                                                  },
+                                            icon: Icons.delete,
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Card(
+                                        color: Colors.white,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Image.network(
+                                                getImageByUnitType(kb
+                                                    .listUnits[index].unitType),
+                                                width: 34,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const Icon(
+                                                      Icons.storage);
+                                                },
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                  kb.listUnits[index].unitName,
+                                                  style: const TextStyle(
+                                                      fontSize: 16),
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Switch(
+                                                    value: kb.listUnits[index]
+                                                        .isActived,
+                                                    onChanged: (bool value) {
+                                                      _toggleUnitStatus(
+                                                          kb.listUnits[index]
+                                                              .unitId,
+                                                          value);
+                                                    },
+                                                  ),
+                                                ],
+                                              )
+                                            ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Switch(
-                                              value: kb.listUnits[index]
-                                                  .isActived, // Giá trị trạng thái hiện tại của unit
-                                              onChanged: (bool value) {
-                                                _toggleUnitStatus(
-                                                    kb.listUnits[index].unitId,
-                                                    value);
-                                              },
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               );
                             },
                           ),
-                        );
-                      },
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-              const SizedBox(
-                height: 24,
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _saveKnowledgeBase,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colors.indigo,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                  child: const Text(
+                    "Save Changes",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     Expanded(
-              //       child: ElevatedButton(
-              //         onPressed: _saveKnowledgeBase,
-              //         style: ElevatedButton.styleFrom(
-              //           padding: EdgeInsets.symmetric(vertical: 16),
-              //           backgroundColor: Colors.blue,
-              //           shape: const RoundedRectangleBorder(
-              //             borderRadius: BorderRadius.all(Radius.circular(10)),
-              //           ),
-              //         ),
-              //         child: const Text(
-              //           "Chỉnh sửa",
-              //           style: TextStyle(
-              //             color: Colors.white,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(
-              //   height: 10,
-              // ),
             ],
           ),
         ),

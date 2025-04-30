@@ -123,7 +123,7 @@ class _NewBotKnowledgeState extends State<NewBotKnowledge> {
                         child: Row(
                           children: [
                             Image.network(
-                              'https://img.freepik.com/premium-photo/green-white-graphic-stack-barrels-with-green-top_1103290-132885.jpg',
+                              'assets/images/open-book.png',
                               width: 30,
                               errorBuilder: (context, error, stackTrace) {
                                 return const Icon(Icons
