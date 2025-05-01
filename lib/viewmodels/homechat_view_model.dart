@@ -103,7 +103,8 @@ class MessageModel extends ChangeNotifier {
     if (conversations.isEmpty)
       initializeChat(assistantId);
     else {
-      loadConversationHistory(assistantId, conversations.first.id, isClearMessage: false);
+      loadConversationHistory(assistantId, conversations.first.id,
+          isClearMessage: false);
     }
   }
 
@@ -285,7 +286,7 @@ class MessageModel extends ChangeNotifier {
         _messages.add(Message(
           role: 'model',
           content: e.statusCode == 500
-              ? 'Đã xảy ra lỗi máy chủ. Vui lòng thử lại sau hoặc liên hệ hỗ trợ.'
+              ? 'Internal server error when sending message'
               : e.message,
           assistant: Assistant(
             id: assistant.id,
@@ -297,7 +298,7 @@ class MessageModel extends ChangeNotifier {
       } else {
         _messages.add(Message(
           role: 'model',
-          content: 'Lỗi không xác định khi gửi tin nhắn: ${e.toString()}',
+          content: 'Unknown error when sending message: ${e.toString()}',
           assistant: Assistant(
             id: assistant.id,
             model: "dify",
@@ -352,7 +353,8 @@ class MessageModel extends ChangeNotifier {
   }
 
   Future<void> loadConversationHistory(
-      String assistantId, String conversationId,{bool? isClearMessage}) async {
+      String assistantId, String conversationId,
+      {bool? isClearMessage}) async {
     try {
       _isLoading = true;
       notifyListeners();
@@ -361,11 +363,12 @@ class MessageModel extends ChangeNotifier {
         conversationId: conversationId,
         assistantId: assistantId,
       );
-      if(isClearMessage == true || isClearMessage == null){
+      if (isClearMessage == true || isClearMessage == null) {
         _messages.clear();
       }
       // Xóa tin nhắn cũ trước khi thêm lịch sử mới
-      _currentConversationId = conversationId; // Cập nhật ID cuộc hội thoại hiện tại
+      _currentConversationId =
+          conversationId; // Cập nhật ID cuộc hội thoại hiện tại
 
       // Xử lý messages nhận được
       for (var message in response.items) {

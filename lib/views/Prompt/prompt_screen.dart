@@ -4,6 +4,7 @@ import 'package:project_ai_chat/views/Prompt/widgets/prompt_details.dart';
 import 'package:project_ai_chat/viewmodels/prompt_list_view_model.dart';
 import 'package:project_ai_chat/models/prompt_list.dart';
 import 'package:project_ai_chat/models/prompt.dart';
+import 'enums.dart';
 
 class PromptScreen extends StatefulWidget {
   const PromptScreen({super.key});
@@ -17,7 +18,7 @@ class _PromptScreenState extends State<PromptScreen> {
   bool isExpanded = false;
   late Future<PromptList> promptsFuture;
   String searchQuery = '';
-  String selectedCategory = 'all';
+  Category? selectedCategory;
   bool _showFavoritesOnly = false;
   final TextEditingController _searchController = TextEditingController();
   final PromptListViewModel viewModel = PromptListViewModel();
@@ -38,7 +39,7 @@ class _PromptScreenState extends State<PromptScreen> {
   void _refreshPrompts() {
     setState(() {
       promptsFuture = viewModel.fetchPrompts(
-        category: selectedCategory,
+        category: selectedCategory?.value ?? 'all',
         query: searchQuery,
         isFavorite: _showFavoritesOnly,
         isPublic: selectedSegment == 1,
@@ -257,22 +258,28 @@ class _PromptScreenState extends State<PromptScreen> {
           spacing: 8,
           runSpacing: 8,
           children: [
-            for (var category in (isExpanded
-                ? [
-              'all',
-              'marketing',
-              'business',
-              'seo',
-              'writing',
-              'coding',
-              'career',
-              'chatbot',
-              'education',
-              'fun',
-              'productivity',
-              'other'
-            ]
-                : ['all', 'business', 'education']))
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedCategory = null;
+                  _refreshPrompts();
+                });
+              },
+              child: Chip(
+                label: Text(
+                  'All',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: selectedCategory == null ? Colors.white : Colors.blue[900],
+                  ),
+                ),
+                backgroundColor: selectedCategory == null ? Colors.blue : Colors.blue[50],
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              ),
+            ),
+            for (var category in (isExpanded ? Category.values : Category.values.take(3)))
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -282,24 +289,16 @@ class _PromptScreenState extends State<PromptScreen> {
                 },
                 child: Chip(
                   label: Text(
-                    category == 'all'
-                        ? 'All'
-                        : category[0].toUpperCase() + category.substring(1),
+                    category.label,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: selectedCategory == category
-                          ? Colors.white
-                          : Colors.blue[900],
+                      color: selectedCategory == category ? Colors.white : Colors.blue[900],
                     ),
                   ),
-                  backgroundColor: selectedCategory == category
-                      ? Colors.blue
-                      : Colors.blue[50],
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 6),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                  backgroundColor: selectedCategory == category ? Colors.blue : Colors.blue[50],
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 ),
               ),
           ],
@@ -348,84 +347,77 @@ class _PromptScreenState extends State<PromptScreen> {
           itemBuilder: (context, index) {
             final prompt = prompts[index];
             final isFavorite = _favoriteStates[prompt.id] ?? false;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () =>
-                              _openPromptDetailsDialog(context, prompt),
-                          child: Text(
-                            prompt.title,
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+            if(!prompt.category.isEmpty)
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () => _openPromptDetailsDialog(context, prompt),
+                            child: Text(
+                              prompt.title,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Row(
-                      children: [
-                        MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: GestureDetector(
-                            onTap: () =>
-                                _toggleFavorite(prompt.id, isFavorite),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                isFavorite ? Icons.star : Icons.star_border,
-                                color: isFavorite
-                                    ? Colors.yellow[700]
-                                    : Colors.grey,
-                              ),
-                            ),
-                          ),
-                        ),
-                        if (!(prompt.isPublic))
+                      Row(
+                        children: [
                           MouseRegion(
                             cursor: SystemMouseCursors.click,
                             child: GestureDetector(
-                              onTap: () => _deletePrompt(prompt.id),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.delete_outline,
-                                    color: Colors.grey),
+                              onTap: () => _toggleFavorite(prompt.id, isFavorite),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  isFavorite ? Icons.star : Icons.star_border,
+                                  color: isFavorite ? Colors.yellow[700] : Colors.grey,
+                                ),
                               ),
                             ),
                           ),
-                        MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: GestureDetector(
-                            onTap: () =>
-                                _openPromptDetailsDialog(context, prompt),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.arrow_right,
-                                  color: Colors.grey[600]),
+                          if (!(prompt.isPublic))
+                            MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () => _deletePrompt(prompt.id),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.delete_outline, color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                          MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTap: () => _openPromptDetailsDialog(context, prompt),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.arrow_right, color: Colors.grey[600]),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  prompt.description,
-                  style: TextStyle(color: Colors.grey[600]),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-                const Divider(),
-              ],
-            );
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    prompt.description,
+                    style: TextStyle(color: Colors.grey[600]),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                  const Divider(),
+                ],
+              );
           },
         );
       },

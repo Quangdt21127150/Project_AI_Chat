@@ -22,8 +22,6 @@ class BotViewModel extends ChangeNotifier {
   List<Knowledge> _knowledgeList = [];
   bool _isPreview = false;
 
-
-
   bool get isChatWithMyBot => _isChatWithMyBot;
 
   List<MyAiBotMessage> get myAiBotMessages => _myAiBotMessages;
@@ -37,8 +35,6 @@ class BotViewModel extends ChangeNotifier {
   List<Knowledge> get knowledgeList => _knowledgeList;
 
   bool get isPreview => _isPreview;
-
-
 
   set isChatWithMyBot(bool value) {
     _isChatWithMyBot = value;
@@ -60,7 +56,6 @@ class BotViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   /////
 
   bool _isLoading = false;
@@ -74,7 +69,6 @@ class BotViewModel extends ChangeNotifier {
 
   String _query = '';
   bool _isCreated = false;
-
 
   BotList get botList => _botList;
 
@@ -90,7 +84,6 @@ class BotViewModel extends ChangeNotifier {
 
   bool get isCreated => _isCreated;
 
-
   set query(String value) {
     if (_query != value) {
       _query = value;
@@ -98,7 +91,6 @@ class BotViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   BotRequest botRequest = BotRequest(
     assistantName: 'My AI Assistant',
@@ -114,7 +106,6 @@ class BotViewModel extends ChangeNotifier {
   //   await fetchBots(); // Gọi phương thức fetch dữ liệu khi khởi tạo
   //   notifyListeners();
   // }
-
 
   Future<bool> fetchBots() async {
     if (_isLoading) return false;
@@ -133,9 +124,7 @@ class BotViewModel extends ChangeNotifier {
 
     try {
       final result = await _service.fetchBots(
-          query: _query,
-          limit: _limit,
-          offset: _offset);
+          query: _query, limit: _limit, offset: _offset);
 
       print('✅ Lấy result rồi: $result');
       // Cập nhật danh sách và trạng thái phân trang
@@ -152,7 +141,6 @@ class BotViewModel extends ChangeNotifier {
     return true;
   }
 
-
   Future<void> loadMoreBots() async {
     if (_isLoadingMore || !_hasNext) return;
 
@@ -161,9 +149,7 @@ class BotViewModel extends ChangeNotifier {
 
     try {
       final result = await _service.fetchBots(
-          query: _query,
-          limit: _limit,
-          offset: _offset);
+          query: _query, limit: _limit, offset: _offset);
 
       // Cập nhật danh sách và trạng thái phân trang
       _botList.data.addAll(result.data);
@@ -213,12 +199,11 @@ class BotViewModel extends ChangeNotifier {
       notifyListeners();
 
       String processedMessage;
-      if (_isPreview){
+      if (_isPreview) {
         _currentOpenAiThreadId = _currentBot.openAiThreadIdPlay;
         processedMessage = await _service.askAssistant(
             _currentBot.id, _currentOpenAiThreadId, message);
-      }
-      else {
+      } else {
         _currentOpenAiThreadId = await _service.getThread(_currentChatBot.id);
         processedMessage = await _service.askAssistant(
             _currentChatBot.id, _currentOpenAiThreadId, message);
@@ -229,7 +214,7 @@ class BotViewModel extends ChangeNotifier {
 
       // Xử lý pattern dạng "1. Tên - URL\nMô tả"
       final RegExp pattern =
-      RegExp(r'(\d+\.\s+)([^-\n]+)-\s*(https?:\/\/[^\n]+)\n([^\n]+)');
+          RegExp(r'(\d+\.\s+)([^-\n]+)-\s*(https?:\/\/[^\n]+)\n([^\n]+)');
       processedMessage = processedMessage.replaceAllMapped(pattern, (match) {
         final number = match[1]; // Số thứ tự (1.)
         final name = match[2]; // Tên website
@@ -256,14 +241,14 @@ class BotViewModel extends ChangeNotifier {
         _myAiBotMessages.add(MyAiBotMessage(
           role: 'model',
           content: e.statusCode == 500
-              ? 'Đã xảy ra lỗi máy chủ. Vui lòng thử lại sau hoặc liên hệ hỗ trợ.'
+              ? 'Internal server error when sending message'
               : e.message,
           isErrored: true,
         ));
       } else {
         _myAiBotMessages.add(MyAiBotMessage(
           role: 'model',
-          content: 'Lỗi không xác định khi gửi tin nhắn: ${e.toString()}',
+          content: 'Unknown error when sending message: ${e.toString()}',
           isErrored: true,
         ));
       }
@@ -277,19 +262,17 @@ class BotViewModel extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
-      if (_isPreview){
+      if (_isPreview) {
         _currentOpenAiThreadId = _currentBot.openAiThreadIdPlay;
-      }
-      else {
+      } else {
         _currentOpenAiThreadId = await _service.getThread(_currentChatBot.id);
       }
-      List<MyAiBotMessage>? response = await _service.retrieveMessageOfThread(
-          _currentOpenAiThreadId);
+      List<MyAiBotMessage>? response =
+          await _service.retrieveMessageOfThread(_currentOpenAiThreadId);
 
       _myAiBotMessages.clear(); // Xóa tin nhn cũ trước khi thêm lịch sử mới
 
       if (response != null) {
-
         // Xử lý messages nhận được
         for (int i = response.length - 1; i >= 0; i--) {
           var message = response[i];
@@ -310,9 +293,9 @@ class BotViewModel extends ChangeNotifier {
   }
 
   Future<bool> importKnowledge(String knowledgeId) async {
-    bool response = await _service.importKnowledgeToAiBot(currentBot.id, knowledgeId);
-    if(response)
-    {
+    bool response =
+        await _service.importKnowledgeToAiBot(currentBot.id, knowledgeId);
+    if (response) {
       getImportedKnowledge(currentBot.id);
       return true;
     }
@@ -326,9 +309,9 @@ class BotViewModel extends ChangeNotifier {
   }
 
   Future<bool> removeKnowledge(String knowledgeId) async {
-    bool response = await _service.removeKnowledgeFromAiBot(currentBot.id, knowledgeId);
-    if(response)
-    {
+    bool response =
+        await _service.removeKnowledgeFromAiBot(currentBot.id, knowledgeId);
+    if (response) {
       getImportedKnowledge(currentBot.id);
       return true;
     }
@@ -336,9 +319,9 @@ class BotViewModel extends ChangeNotifier {
   }
 
   Future<bool> updateAiBotWithThreadPlayGround() async {
-    Bot response = await _service.updateAiBotWithThreadPlayGround(currentBot.id);
-    if(response.id != '')
-    {
+    Bot response =
+        await _service.updateAiBotWithThreadPlayGround(currentBot.id);
+    if (response.id != '') {
       currentBot = response;
       _myAiBotMessages.clear();
       notifyListeners();

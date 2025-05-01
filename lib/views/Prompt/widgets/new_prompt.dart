@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_ai_chat/models/prompt_model.dart';
 import 'package:project_ai_chat/viewmodels/prompt_list_view_model.dart';
+import '../enums.dart';
 
 class NewPrompt {
   static void show(BuildContext context, {required VoidCallback onPromptCreated}) {
@@ -23,8 +24,8 @@ class NewPromptContent extends StatefulWidget {
 }
 
 class NewPromptContentState extends State<NewPromptContent> {
-  String selectedLanguage = 'English';
-  String selectedCategory = 'Other';
+  Language selectedLanguage = Language.English;
+  Category selectedCategory = Category.other;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -119,7 +120,7 @@ class NewPromptContentState extends State<NewPromptContent> {
         _buildDropdown(
           label: 'Language',
           value: selectedLanguage,
-          items: ['English', 'Japanese', 'Spanish', 'French', 'German'],
+          items: Language.values,
           onChanged: (value) => setState(() => selectedLanguage = value!),
           isRequired: true,
         ),
@@ -129,12 +130,15 @@ class NewPromptContentState extends State<NewPromptContent> {
         _buildDropdown(
           label: 'Category',
           value: selectedCategory,
-          items: ['Other', 'Business', 'Marketing', 'SEO', 'Writing', 'Coding', 'Career', 'Chatbot', 'Education', 'Fun', 'Productivity'],
+          items: Category.values,
           onChanged: (value) => setState(() => selectedCategory = value!),
           isRequired: true,
         ),
         const SizedBox(height: 20),
-        _buildTextField(label: 'Description', hint: 'Describe your prompt', controller: descriptionController),
+        _buildTextField(
+            label: 'Description',
+            hint: 'Describe your prompt',
+            controller: descriptionController),
         const SizedBox(height: 20),
         _buildTextFieldWithInfo(
           label: 'Prompt',
@@ -236,13 +240,7 @@ class NewPromptContentState extends State<NewPromptContent> {
     );
   }
 
-  Widget _buildDropdown({
-    required String label,
-    required String value,
-    required List<String> items,
-    required ValueChanged<String?> onChanged,
-    bool isRequired = false,
-  }) {
+  Widget _buildDropdown<T extends Enum>({required String label, required T value, required List<T> items, required ValueChanged<T?> onChanged, bool isRequired = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -260,9 +258,14 @@ class NewPromptContentState extends State<NewPromptContent> {
           ],
         ),
         const SizedBox(height: 8),
-        DropdownButtonFormField<String>(
+        DropdownButtonFormField<T>(
           value: value,
-          items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
+          items: items.map((item) {
+            String displayLabel = item is Language
+                ? (item as Language).label
+                : (item as Category).label;
+            return DropdownMenuItem(value: item, child: Text(displayLabel));
+          }).toList(),
           onChanged: onChanged,
           decoration: InputDecoration(
             filled: true,
@@ -320,9 +323,9 @@ class NewPromptContentState extends State<NewPromptContent> {
               }
 
               PromptRequest newPrompt = PromptRequest(
-                language: selectedLanguage,
+                language: selectedLanguage.value,
                 title: titleController.text,
-                category: selectedCategory.toLowerCase(),
+                category: selectedCategory.value,
                 description: descriptionController.text,
                 content: contentController.text,
                 isPublic: false,
