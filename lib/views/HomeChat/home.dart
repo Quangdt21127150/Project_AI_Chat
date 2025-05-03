@@ -176,7 +176,7 @@ class _HomeChatState extends State<HomeChat> {
     setState(() {
       _selectedBottomItemIndex = index;
     });
-    if (index == 1) {
+    if (index == 0) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const PromptScreen()),
@@ -189,17 +189,17 @@ class _HomeChatState extends State<HomeChat> {
         }
         _loadAllPrompt();
       });
-    } else if (index == 2) {
+    } else if (index == 1) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const BotScreen()),
       );
-    } else if (index == 3) {
+    } else if (index == 2) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => EmailComposer()),
       );
-    } else if (index == 4) {
+    } else if (index == 3) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const AccountScreen()),

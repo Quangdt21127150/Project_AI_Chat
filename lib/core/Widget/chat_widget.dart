@@ -103,9 +103,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                         ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Colors.grey, width: 1), // Viền bình thường
+                              color: Colors.grey, width: 1),
                           borderRadius:
-                              BorderRadius.circular(20), // Bo cong góc
+                              BorderRadius.circular(20),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
