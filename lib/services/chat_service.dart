@@ -313,7 +313,6 @@ class ChatService {
       );
     }
   }
-}
 
   Future<void> deleteConversationHistory({
     required String conversationId,
