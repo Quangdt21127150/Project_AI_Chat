@@ -4,6 +4,7 @@ import 'package:project_ai_chat/views/Prompt/widgets/prompt_details.dart';
 import 'package:project_ai_chat/viewmodels/prompt_list_view_model.dart';
 import 'package:project_ai_chat/models/prompt_list.dart';
 import 'package:project_ai_chat/models/prompt.dart';
+import 'package:project_ai_chat/core/Widget/delete_confirm_dialog.dart';
 import 'enums.dart';
 
 class PromptScreen extends StatefulWidget {
@@ -67,6 +68,19 @@ class _PromptScreenState extends State<PromptScreen> {
         const SnackBar(content: Text('Failed to delete prompt.')),
       );
     }
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, Prompt prompt) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DeleteConfirmationDialog(
+          title: 'Delete Prompt',
+          message: 'Are you sure you want to delete the prompt?',
+          onConfirm: () => _deletePrompt(prompt.id),
+        );
+      },
+    );
   }
 
   void _openPromptDetailsDialog(BuildContext context, Prompt prompt) {
@@ -170,14 +184,16 @@ class _PromptScreenState extends State<PromptScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: selectedSegment == index ? Colors.blue : Colors.transparent,
+            color:
+            selectedSegment == index ? Colors.blue : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: selectedSegment == index ? Colors.white : Colors.black87,
+              color:
+              selectedSegment == index ? Colors.white : Colors.black87,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -243,7 +259,9 @@ class _PromptScreenState extends State<PromptScreen> {
             ),
             child: Icon(
               _showFavoritesOnly ? Icons.star : Icons.star_border,
-              color: _showFavoritesOnly ? Colors.yellow[700] : Colors.grey[600],
+              color: _showFavoritesOnly
+                  ? Colors.yellow[700]
+                  : Colors.grey[600],
             ),
           ),
         ),
@@ -271,15 +289,22 @@ class _PromptScreenState extends State<PromptScreen> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: selectedCategory == null ? Colors.white : Colors.blue[900],
+                    color: selectedCategory == null
+                        ? Colors.white
+                        : Colors.blue[900],
                   ),
                 ),
-                backgroundColor: selectedCategory == null ? Colors.blue : Colors.blue[50],
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                backgroundColor: selectedCategory == null
+                    ? Colors.blue
+                    : Colors.blue[50],
+                padding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
               ),
             ),
-            for (var category in (isExpanded ? Category.values : Category.values.take(3)))
+            for (var category
+            in (isExpanded ? Category.values : Category.values.take(3)))
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -293,12 +318,18 @@ class _PromptScreenState extends State<PromptScreen> {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: selectedCategory == category ? Colors.white : Colors.blue[900],
+                      color: selectedCategory == category
+                          ? Colors.white
+                          : Colors.blue[900],
                     ),
                   ),
-                  backgroundColor: selectedCategory == category ? Colors.blue : Colors.blue[50],
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  backgroundColor: selectedCategory == category
+                      ? Colors.blue
+                      : Colors.blue[50],
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 6),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
                 ),
               ),
           ],
@@ -357,10 +388,12 @@ class _PromptScreenState extends State<PromptScreen> {
                       child: MouseRegion(
                         cursor: SystemMouseCursors.click,
                         child: GestureDetector(
-                          onTap: () => _openPromptDetailsDialog(context, prompt),
+                          onTap: () =>
+                              _openPromptDetailsDialog(context, prompt),
                           child: Text(
                             prompt.title,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
@@ -372,12 +405,15 @@ class _PromptScreenState extends State<PromptScreen> {
                         MouseRegion(
                           cursor: SystemMouseCursors.click,
                           child: GestureDetector(
-                            onTap: () => _toggleFavorite(prompt.id, isFavorite),
+                            onTap: () =>
+                                _toggleFavorite(prompt.id, isFavorite),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Icon(
                                 isFavorite ? Icons.star : Icons.star_border,
-                                color: isFavorite ? Colors.yellow[700] : Colors.grey,
+                                color: isFavorite
+                                    ? Colors.yellow[700]
+                                    : Colors.grey,
                               ),
                             ),
                           ),
@@ -386,20 +422,24 @@ class _PromptScreenState extends State<PromptScreen> {
                           MouseRegion(
                             cursor: SystemMouseCursors.click,
                             child: GestureDetector(
-                              onTap: () => _deletePrompt(prompt.id),
+                              onTap: () => _showDeleteConfirmationDialog(
+                                  context, prompt),
                               child: const Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.delete_outline, color: Colors.grey),
+                                child: Icon(Icons.delete_outline,
+                                    color: Colors.grey),
                               ),
                             ),
                           ),
                         MouseRegion(
                           cursor: SystemMouseCursors.click,
                           child: GestureDetector(
-                            onTap: () => _openPromptDetailsDialog(context, prompt),
+                            onTap: () =>
+                                _openPromptDetailsDialog(context, prompt),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.arrow_right, color: Colors.grey[600]),
+                              child: Icon(Icons.arrow_right,
+                                  color: Colors.grey[600]),
                             ),
                           ),
                         ),

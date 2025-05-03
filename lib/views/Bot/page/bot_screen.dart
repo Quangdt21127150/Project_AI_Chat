@@ -108,8 +108,6 @@ class _BotScreenState extends State<BotScreen> {
             Expanded(
               child: BotListWidget(),
             ),
-
-
           ],
         ),
       ),
