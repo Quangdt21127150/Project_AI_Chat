@@ -47,7 +47,7 @@ class _HomeChatState extends State<HomeChat> {
   bool _hasText = false;
   bool _showSlash = false;
   int _selectedBottomItemIndex = 0;
-  List<String>? _imagePaths;
+  List<String>? _files;
   late List<AIItem> _listAIItem;
   late String _selectedAIItem;
 
@@ -109,16 +109,16 @@ class _HomeChatState extends State<HomeChat> {
           });
           _interstitialAd?.show();
           _interstitialAd?.fullScreenContentCallback =
-              FullScreenContentCallback(
-                onAdDismissedFullScreenContent: (InterstitialAd ad) {
-                  ad.dispose();
-                  print("Interstitial Ad dismissed.");
-                },
-                onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-                  ad.dispose();
-                  print("Failed to show Interstitial Ad: ${error.message}");
-                },
-              );
+            FullScreenContentCallback(
+              onAdDismissedFullScreenContent: (InterstitialAd ad) {
+                ad.dispose();
+                print("Interstitial Ad dismissed.");
+              },
+              onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+                ad.dispose();
+                print("Failed to show Interstitial Ad: ${error.message}");
+              },
+            );
         },
         onAdFailedToLoad: (error) {
           print('Interstitial ad failed to load: $error');
@@ -136,7 +136,8 @@ class _HomeChatState extends State<HomeChat> {
   }
 
   Future<void> _loadConversation() async {
-    final aiItem = _listAIItem.firstWhere((aiItem) => aiItem.name == _selectedAIItem);
+    final aiItem =
+        _listAIItem.firstWhere((aiItem) => aiItem.name == _selectedAIItem);
     try {
       Provider.of<HomeChatViewModel>(context, listen: false)
           .fetchAllConversations(aiItem.id, 'dify')
@@ -214,7 +215,7 @@ class _HomeChatState extends State<HomeChat> {
   }
 
   void _sendMessage() async {
-    if (_imagePaths == null && _controller.text.isEmpty) return;
+    if (_files == null && _controller.text.isEmpty) return;
 
     try {
       final aiItem = _listAIItem.firstWhere((aiItem) => aiItem.name == _selectedAIItem);
@@ -222,12 +223,12 @@ class _HomeChatState extends State<HomeChat> {
       await Provider.of<HomeChatViewModel>(context, listen: false).sendMessage(
         _controller.text.isEmpty ? '' : _controller.text,
         aiItem,
-        imagePaths: _imagePaths ?? null,
+        files: _files ?? [],
       );
 
       _controller.clear();
       setState(() {
-        _imagePaths = null; // Clear image paths after sending
+        _files = null; // Clear image paths after sending
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -356,21 +357,18 @@ class _HomeChatState extends State<HomeChat> {
                                   Icons.flash_on,
                                   color: Colors.orange,
                                 ),
-                                messageModel.maxTokens == 99999 &&
-                                    messageModel.maxTokens != null
-                                    ? const Text(
+                                messageModel.maxTokens == 99999 && messageModel.maxTokens != null
+                                ? const Text(
                                   "Unlimited",
                                   style: TextStyle(
                                     fontSize: 10,
                                     color: Colors.orange,
                                   ),
                                 )
-                                    : Text(
-                                  '${messageModel.remainingUsage}',
-                                  style: const TextStyle(
-                                    color: Color.fromRGBO(119, 117, 117, 1.0),
+                                : Text(
+                                    '${messageModel.remainingUsage}',
+                                    style: const TextStyle(color: Color.fromRGBO(119, 117, 117, 1.0)),
                                   ),
-                                ),
                               ],
                             ),
                           ),
@@ -400,8 +398,7 @@ class _HomeChatState extends State<HomeChat> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 10, bottom: 10, right: 10),
                             child: !botModel.isChatWithMyBot
-                              ? Column(
-                              children: [
+                              ? Column(children: [
                                 Expanded(
                                   child: ListView.builder(
                                     controller: _scrollController,
@@ -429,8 +426,7 @@ class _HomeChatState extends State<HomeChat> {
                                                 color: const Color.fromARGB(255, 158, 198, 232),
                                                 width: 1.0,
                                               ),
-                                              borderRadius:
-                                              BorderRadius.circular(20.0),
+                                              borderRadius: BorderRadius.circular(20.0),
                                             ),
                                             constraints: BoxConstraints(
                                               maxHeight: MediaQuery.of(context).size.height / 3,
@@ -461,6 +457,11 @@ class _HomeChatState extends State<HomeChat> {
                                   isOpenDeviceWidget: _isOpenDeviceWidget,
                                   toggleDeviceVisibility: _toggleDeviceVisibility,
                                   hasText: _hasText,
+                                  updateImagePaths: (paths) {
+                                    setState(() {
+                                      _files = paths;
+                                    });
+                                  },
                                 ),
                                 const SizedBox(height: 5),
                               ],

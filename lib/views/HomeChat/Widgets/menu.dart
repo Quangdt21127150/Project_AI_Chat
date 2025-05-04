@@ -325,11 +325,7 @@ class _MenuState extends State<Menu> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   final conversation = conversations[index];
-                  final previewText = conversation.title.isNotEmpty
-                      ? conversation.title.length > 30
-                      ? '${conversation.title.substring(0, 30)}...'
-                      : conversation.title
-                      : "Empty conversation";
+                  final title = conversation.title.trim();
 
                   return Card(
                     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -349,7 +345,12 @@ class _MenuState extends State<Menu> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(previewText, maxLines: 1, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                                  Text(
+                                    title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                  ),
                                   const SizedBox(height: 4),
                                   Text(_formatTimestamp(conversation.createdAt), style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                                 ],
@@ -358,12 +359,12 @@ class _MenuState extends State<Menu> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.edit, color: Colors.green),
-                            onPressed: () => _showRenameDialog(conversation.id, conversation.title),
+                            onPressed: () => _showRenameDialog(conversation.id, conversation.title ?? ''),
                             tooltip: 'Rename',
                           ),
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _showDeleteDialog(conversation.id, conversation.title),
+                            onPressed: () => _showDeleteDialog(conversation.id, conversation.title ?? ''),
                             tooltip: 'Delete',
                           ),
                         ],

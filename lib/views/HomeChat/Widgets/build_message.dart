@@ -140,14 +140,14 @@ class BuildMessage extends StatelessWidget {
                     children: [
                       isUser ? Column(
                         children: [
-                          if (message.imagePaths != null &&
-                              message.imagePaths!.isNotEmpty) ...[
+                          if (message.files != null &&
+                              message.files!.isNotEmpty) ...[
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: message.imagePaths!.map((path) {
+                                children: message.files!.map((path) {
                                   return ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
                                     child: Image.file(
