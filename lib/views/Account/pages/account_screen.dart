@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_ai_chat/constants/colors.dart'; // Use old code's color constants
+import 'package:project_ai_chat/constants/text_strings.dart';
 import 'package:project_ai_chat/views/Login/login_screen.dart';
 import 'package:project_ai_chat/viewmodels/auth_view_model.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class _AccountScreenState extends State<AccountScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),
-            (Route<dynamic> route) => false,
+        (Route<dynamic> route) => false,
       );
     }
   }
@@ -150,8 +151,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () async {
-                            final Uri url = Uri.parse(
-                                'https://admin.dev.jarvis.cx/pricing/overview');
+                            final Uri url = Uri.parse(linkUpgrade);
                             if (await canLaunchUrl(url)) {
                               await launchUrl(url);
                             } else {
@@ -194,12 +194,9 @@ class _AccountScreenState extends State<AccountScreen> {
                   LinearProgressIndicator(
                     value: authViewModel.maxTokens == 99999
                         ? 1.0
-                        : authViewModel.maxTokens != null &&
-                        authViewModel.remainingTokens != null
-                        ? (authViewModel.remainingTokens! /
-                        authViewModel.maxTokens!)
-                        .toDouble()
-                        : 0.0,
+                        : authViewModel.maxTokens != null && authViewModel.remainingTokens != null
+                          ? (authViewModel.remainingTokens! / authViewModel.maxTokens!).toDouble()
+                          : 0.0,
                     backgroundColor: Colors.grey[300],
                     color: Colors.blue,
                   ),
@@ -215,14 +212,14 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                       authViewModel.maxTokens == 99999
                           ? const FaIcon(
-                        FontAwesomeIcons.infinity,
-                        size: 16.0,
-                        color: Colors.blue,
-                      )
+                              FontAwesomeIcons.infinity,
+                              size: 16.0,
+                              color: Colors.blue,
+                            )
                           : Text(
-                        authViewModel.maxTokens?.toString() ?? '0',
-                        style: const TextStyle(fontSize: 16),
-                      ),
+                              authViewModel.maxTokens?.toString() ?? '0',
+                              style: const TextStyle(fontSize: 16),
+                            ),
                     ],
                   ),
                   Padding(
